@@ -60,6 +60,12 @@ class UsageTracker:
         entry.total_tokens += usage.total_tokens
         entry.cached_tokens += usage.cached_tokens
 
+    def reset(self) -> None:
+        """Forget everything recorded so far and restart the clock."""
+        self._agents.clear()
+        self._started = time.monotonic()
+        self._ended = None
+
     def finish(self) -> None:
         self._ended = time.monotonic()
 

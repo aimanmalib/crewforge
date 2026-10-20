@@ -17,6 +17,7 @@ from typing import Any, NoReturn, TypeVar
 
 import click
 from rich.console import Console
+from rich.markup import escape
 from rich.table import Table
 
 from .core.config import LLMConfig, Settings
@@ -52,7 +53,7 @@ def recipe_settings(ctx: click.Context, recipe: str) -> dict[str, Any]:
 
 
 def fail(message: str, code: int = EXIT_FAILED) -> NoReturn:
-    err_console.print(f"[bold red]error:[/] {message}", highlight=False, soft_wrap=True)
+    err_console.print(f"[bold red]error:[/] {escape(message)}", highlight=False, soft_wrap=True)
     sys.exit(code)
 
 
@@ -60,7 +61,9 @@ def report_crew_failure(exc: CrewFailedError) -> None:
     err_console.print(f"[bold red]error:[/] {exc.crew} failed", highlight=False, soft_wrap=True)
     for f in exc.failures:
         err_console.print(
-            f"  [red]✗ agent '{f.agent}'[/] ({f.kind}): {f.error}", highlight=False, soft_wrap=True
+            f"  [red]✗ agent '{escape(f.agent)}'[/] ({f.kind}): {escape(f.error)}",
+            highlight=False,
+            soft_wrap=True,
         )
 
 
