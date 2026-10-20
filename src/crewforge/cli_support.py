@@ -52,14 +52,16 @@ def recipe_settings(ctx: click.Context, recipe: str) -> dict[str, Any]:
 
 
 def fail(message: str, code: int = EXIT_FAILED) -> NoReturn:
-    err_console.print(f"[bold red]error:[/] {message}", highlight=False)
+    err_console.print(f"[bold red]error:[/] {message}", highlight=False, soft_wrap=True)
     sys.exit(code)
 
 
 def report_crew_failure(exc: CrewFailedError) -> None:
-    err_console.print(f"[bold red]error:[/] {exc.crew} failed", highlight=False)
+    err_console.print(f"[bold red]error:[/] {exc.crew} failed", highlight=False, soft_wrap=True)
     for f in exc.failures:
-        err_console.print(f"  [red]✗ agent '{f.agent}'[/] ({f.kind}): {f.error}", highlight=False)
+        err_console.print(
+            f"  [red]✗ agent '{f.agent}'[/] ({f.kind}): {f.error}", highlight=False, soft_wrap=True
+        )
 
 
 def run(coro: Coroutine[Any, Any, T]) -> T:
