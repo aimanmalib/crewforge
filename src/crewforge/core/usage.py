@@ -21,15 +21,27 @@ class AgentUsage:
     cached_tokens: int = 0
     unreported_calls: int = 0  # calls whose response carried no usage object
     errors: int = 0
+    retries: int = 0  # extra HTTP attempts (429/5xx/network) behind these calls
     latency_ms: float = 0.0
 
     @property
     def avg_latency_ms(self) -> float:
         return self.latency_ms / self.calls if self.calls else 0.0
 
+    @property
+    def tokens_per_call(self) -> float:
+        return self.total_tokens / self.calls if self.calls else 0.0
+
+    @property
+    def cache_hit_rate(self) -> float:
+        """Share of prompt tokens the provider reported as served from its cache."""
+        return self.cached_tokens / self.prompt_tokens if self.prompt_tokens else 0.0
+
     def to_dict(self) -> dict[str, Any]:
         data = asdict(self)
         data["avg_latency_ms"] = round(self.avg_latency_ms, 1)
+        data["tokens_per_call"] = round(self.tokens_per_call, 1)
+        data["cache_hit_rate"] = round(self.cache_hit_rate, 3)
         data["latency_ms"] = round(self.latency_ms, 1)
         return data
 
@@ -44,11 +56,18 @@ class UsageTracker:
         self.run_id = time.strftime("%Y%m%d_%H%M%S")
 
     def record(
-        self, agent: str, usage: Usage | None, latency_ms: float = 0.0, *, error: bool = False
+        self,
+        agent: str,
+        usage: Usage | None,
+        latency_ms: float = 0.0,
+        *,
+        error: bool = False,
+        retries: int = 0,
     ) -> None:
         entry = self._agents.setdefault(agent, AgentUsage(agent))
         entry.calls += 1
         entry.latency_ms += latency_ms
+        entry.retries += retries
         if error:
             entry.errors += 1
             return
@@ -122,6 +141,20 @@ class UsageTracker:
         if self.unreported_calls:
             text += f" · {self.unreported_calls} call(s) returned no usage (not counted)"
         return text
+
+    def report(self) -> str:
+        """Plain-text per-agent table (for logs and non-terminal output)."""
+        lines = [
+            f"Token usage — run {self.run_id} (provider-reported)",
+            f"{'agent':<16}{'calls':>6}{'prompt':>10}{'completion':>12}{'total':>10}{'ms/call':>9}",
+        ]
+        for a in self._agents.values():
+            lines.append(
+                f"{a.agent:<16}{a.calls:>6}{a.prompt_tokens:>10,}{a.completion_tokens:>12,}"
+                f"{a.total_tokens:>10,}{a.avg_latency_ms:>9.0f}"
+            )
+        lines.append(self.one_line())
+        return "\n".join(lines)
 
     def save(self, path: str | Path) -> Path:
         out = Path(path)

@@ -80,7 +80,12 @@ class Agent:
         except Exception:
             self.tracker.record(self.name, None, (time.monotonic() - start) * 1000, error=True)
             raise
-        self.tracker.record(self.name, response.usage, (time.monotonic() - start) * 1000)
+        self.tracker.record(
+            self.name,
+            response.usage,
+            (time.monotonic() - start) * 1000,
+            retries=max(0, response.attempts - 1),
+        )
         # Honest-failure guard: a blank completion is a failure of this agent,
         # never an answer. Removing this check makes tests/core/test_honest_failure.py red.
         if not allow_empty and not response.content.strip():
