@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+import re
+
 import click
 from rich.markdown import Markdown
 from rich.panel import Panel
@@ -11,6 +13,12 @@ from ...cli_support import console, err_console, llm_config, print_usage, recipe
 from ...core.errors import ConfigError
 from .pipeline import DocsPipeline
 from .settings import DocsSettings
+
+
+def as_markdown(text: str) -> str:
+    """Models often bullet with "•", which Markdown does not treat as a list."""
+    return re.sub(r"(?m)^\s*•\s*", "- ", text)
+
 
 FILES = click.argument(
     "files", nargs=-1, required=True, type=click.Path(exists=True, dir_okay=False)
@@ -138,7 +146,7 @@ def summarize(ctx, files, length):
                     title = f"Summary: {doc.filename}"
                     if summary.truncated:
                         title += " (first part only — document was truncated)"
-                    console.print(Panel(Markdown(summary.summary_text), title=title))
+                    console.print(Panel(Markdown(as_markdown(summary.summary_text)), title=title))
             finally:
                 print_usage(pipeline.tracker)
 

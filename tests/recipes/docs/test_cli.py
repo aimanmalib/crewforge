@@ -176,3 +176,9 @@ class TestHonestFailure:
         result = CliRunner().invoke(main, ["ask", str(sample_doc_path), "-q", "pipeline?"])
         assert result.exit_code == 1
         assert "forbidden" in result.output and len(fake_llm.calls) == 1
+
+
+def test_bullet_glyphs_render_as_a_markdown_list():
+    from crewforge.recipes.docs.cli import as_markdown
+
+    assert as_markdown("Summary.\n• One\n  • Two") == "Summary.\n- One\n- Two"

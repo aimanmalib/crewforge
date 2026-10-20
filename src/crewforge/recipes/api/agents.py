@@ -265,7 +265,11 @@ class TestAgent(ApiAgent):
                 lines.append(f'    resp = client.{method}("{url}")')
             else:
                 lines.append(f'    resp = client.{method}("{url}", json={{}})')
-            lines.append("    assert resp.status_code in (200, 201, 204, 401, 403, 422)")
+            allowed = "200, 201, 204, 401, 403, 422"
+            if "{" in ep.path:
+                # The sample id ("1") need not exist: "not found" is a correct answer.
+                allowed += ", 404"
+            lines.append(f"    assert resp.status_code in ({allowed})")
             lines.append("")
         return "\n".join(lines)
 

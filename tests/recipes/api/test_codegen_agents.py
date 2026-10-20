@@ -120,3 +120,24 @@ class TestDocAgent:
         with pytest.raises(EmptyOutputError) as info:
             await DocAgent(mock_client, tracker).generate_docs(ITEMS)
         assert info.value.agent == "doc_gen"
+
+
+class TestGeneratedSmokeTests:
+    @pytest.mark.asyncio
+    async def test_routes_with_ids_accept_not_found(self, mock_client, tracker):
+        # Found in a real run: the router kept an in-memory store, so DELETE
+        # /todos/1 answered 404 and the generated smoke test failed.
+        from crewforge.recipes.api.agents import TestAgent
+
+        desc = APIDescription(
+            title="T",
+            description="D",
+            endpoints=[
+                ParsedEndpoint(path="/todos", method="GET", description="List"),
+                ParsedEndpoint(path="/todos/{id}", method="DELETE", description="Delete"),
+            ],
+        )
+        code = await TestAgent(mock_client, tracker).generate_tests(desc)
+        list_test, delete_test = code.split("def test_")[1:]
+        assert "404" not in list_test
+        assert "404" in delete_test and '"/api/v1/todos/1"' in delete_test

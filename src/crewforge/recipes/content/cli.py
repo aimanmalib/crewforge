@@ -18,6 +18,7 @@ from ...cli_support import (
 )
 from .pipeline import ContentPipeline
 from .settings import PUBLISH_TARGETS, ContentSettings
+from .text import word_count
 
 
 @click.command("write")
@@ -113,7 +114,7 @@ def write(
     files = "\n".join(f"  {f}" for f in result.output_files)
     console.print(
         Panel(
-            f"Article: {len(result.article.split())} words · quality score "
+            f"Article: {word_count(result.article)} words · quality score "
             f"{result.quality_score:.0f}/100\nFiles:\n{files}\nMetrics: {result.metrics_path}",
             title=f"crewforge write — {topic}",
             border_style="green" if result.ok else "yellow",
