@@ -1,0 +1,31 @@
+name: Bug report
+description: Something crewforge did wrong (including reporting success when it should not have)
+labels: [bug]
+body:
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened
+      description: Command you ran, what you expected, what you got. Remove API keys and private data.
+    validations:
+      required: true
+  - type: input
+    id: command
+    attributes:
+      label: Command
+      placeholder: crewforge --provider groq review src/ -f json
+  - type: input
+    id: provider
+    attributes:
+      label: Provider and model
+      placeholder: openrouter / openai/gpt-4o-mini
+  - type: input
+    id: version
+    attributes:
+      label: crewforge version and Python version
+      placeholder: crewforge 0.1.0, Python 3.12
+  - type: textarea
+    id: output
+    attributes:
+      label: Output (stderr included)
+      render: text
