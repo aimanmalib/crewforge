@@ -13,6 +13,11 @@ crewforge scaffold "Todo API: list, create and delete todos" -o todo-api
 crewforge write "Why unit tests matter" -f markdown -f html
 ```
 
+<p align="center">
+  <img src="docs/demo/review.gif" alt="Terminal demo: crewforge review on a login function finds the SQL injection (CWE-89) as critical and requests changes" width="900">
+</p>
+<p align="center"><sub>A real run of <code>crewforge review</code>: seven agents, ~25 s, provider-reported tokens. Recorded with <a href="https://github.com/charmbracelet/vhs">VHS</a> from <a href="docs/demo/review.tape"><code>docs/demo/review.tape</code></a> using Gemini 3.8 Flash through an OpenAI-compatible gateway (the <code>custom</code> provider). The wait for the model is shown in full.</sub></p>
+
 ## Why one crew, four recipes
 
 crewforge started as four separate command-line tools —
