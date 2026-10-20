@@ -83,12 +83,8 @@ def main(ctx, provider, model, base_url, config_path, verbose):
 def providers():
     """List provider presets and the env var that holds each key."""
     table = Table(title="Provider presets", title_justify="left")
-    table.add_column("Name", style="bold cyan")
-    table.add_column("Provider")
-    table.add_column("Base URL")
-    table.add_column("Default model")
-    table.add_column("Key env var")
-    table.add_column("Auth")
+    for title in ("Name", "Provider", "Base URL", "Default model", "Key env var", "Auth"):
+        table.add_column(title, overflow="fold", style="bold cyan" if title == "Name" else None)
     for p in PROVIDERS.values():
         table.add_row(
             p.name,

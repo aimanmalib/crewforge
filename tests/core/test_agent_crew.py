@@ -134,3 +134,14 @@ async def test_allow_empty_opt_out(fake_llm):
 
 async def _value(v):
     return v
+
+
+async def test_retries_are_recorded_per_agent(fake_llm):
+    responses = [httpx.Response(503), "recovered"]
+    fake_llm.responder = lambda p: responses.pop(0)
+    async with Crew("t", LLMConfig(retry_delay=0)) as crew:
+        resp = await crew.agent(Writer).ask("x")
+    assert resp.content == "recovered" and resp.attempts == 2
+    usage = crew.tracker.by_agent()["writer"]
+    assert (usage.calls, usage.retries) == (1, 1)
+    assert fake_llm.sleeps == [0]
