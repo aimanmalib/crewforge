@@ -78,7 +78,7 @@ class Crew:
             agent=agent, error=str(exc) or type(exc).__name__, kind=classify(exc)
         )
         self.failures.append(failure)
-        logger.error("[%s] agent '%s' failed: %s", self.name, agent, failure.error)
+        logger.info("[%s] agent %r failed: %s", self.name, agent, failure.error)
         return failure
 
     @staticmethod
