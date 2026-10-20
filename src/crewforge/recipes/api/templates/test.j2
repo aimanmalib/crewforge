@@ -1,0 +1,3 @@
+def {{ test_name }}(client):
+    resp = client.{{ method }}("{{ path }}")
+    assert resp.status_code in (200, 201, 401, 422)

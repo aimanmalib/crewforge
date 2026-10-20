@@ -1,0 +1,4 @@
+class {{ name }}(BaseModel):
+{% for field in fields %}
+    {{ field.name }}: {{ field.type }}
+{% endfor %}
