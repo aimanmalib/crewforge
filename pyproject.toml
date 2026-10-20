@@ -83,3 +83,6 @@ select = ["E", "F", "W", "I", "UP", "B"]
 [tool.coverage.run]
 source = ["crewforge"]
 branch = true
+
+[tool.ruff.lint.isort]
+known-first-party = ["crewforge", "tests"]
