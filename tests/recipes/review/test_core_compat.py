@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import json
 import time
+from urllib.parse import urlparse
 
 import httpx
 import pytest
@@ -39,7 +40,7 @@ class TestMiMoConfig:
         assert mimo(api_key="test").temperature == 0.3
 
     def test_base_url(self):  # ::test_base_url
-        assert "token-plan-sgp.xiaomimimo.com" in mimo(api_key="test").base_url
+        assert urlparse(mimo(api_key="test").base_url).hostname == "token-plan-sgp.xiaomimimo.com"
 
 
 class TestReviewConfig:
@@ -171,7 +172,7 @@ class TestLLMConfigPresetResolution:
 
     def test_openrouter_preset(self):
         c = LLMConfig(provider="openrouter", api_key="or-test")
-        assert "openrouter.ai" in c.base_url and c.auth_style == "bearer"
+        assert urlparse(c.base_url).hostname == "openrouter.ai" and c.auth_style == "bearer"
 
     def test_ollama_preset(self):
         c = LLMConfig(provider="ollama")
@@ -244,7 +245,7 @@ class TestMiMoBackwardCompat:
     def test_mimo_config_defaults(self):
         c = mimo(api_key="test")
         assert c.provider == "mimo" and c.model == "mimo-v2.5-pro"
-        assert "xiaomimimo.com" in c.base_url
+        assert urlparse(c.base_url).hostname == "token-plan-sgp.xiaomimimo.com"
         assert c.headers["api-key"] == "test" and c.temperature == 0.3
 
     def test_root_config_mimo_property_aliases_llm(self):

@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import json
 import time
+from urllib.parse import urlparse
 
 import httpx
 import pytest
@@ -185,7 +186,7 @@ class TestPresetResolution:
 
     def test_openrouter_preset(self):
         c = LLMConfig(provider="openrouter", api_key="or-test")
-        assert "openrouter.ai" in c.base_url and c.auth_style == "bearer"
+        assert urlparse(c.base_url).hostname == "openrouter.ai" and c.auth_style == "bearer"
 
     def test_ollama_preset(self):
         c = LLMConfig(provider="ollama", api_key="x")
@@ -267,7 +268,8 @@ class TestMiMoBackwardCompat:
     def test_mimo_defaults(self):
         c = LLMConfig(provider="mimo", api_key="test")
         assert c.provider == "mimo" and c.model == "mimo-v2.5-pro"
-        assert "xiaomimimo.com" in c.base_url and c.headers["api-key"] == "test"
+        assert urlparse(c.base_url).hostname == "token-plan-sgp.xiaomimimo.com"
+        assert c.headers["api-key"] == "test"
 
     def test_mimo_model_env(self, monkeypatch):
         monkeypatch.setenv("CREWFORGE_MODEL", "mimo-other")  # was MIMO_MODEL
