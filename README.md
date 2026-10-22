@@ -42,12 +42,11 @@ reports success when an agent produced nothing.
 
 ## 60-second quickstart
 
-crewforge is not on PyPI yet; install it from git:
-
 ```bash
-pip install "crewforge @ git+https://github.com/aimanmalib/crewforge.git"
+pip install crewforge
 # optional extras: PDF/DOCX ingestion, and the FastAPI app check in `validate`
-pip install "crewforge[docs,api] @ git+https://github.com/aimanmalib/crewforge.git"
+pip install "crewforge[docs,api]"
+# or the latest main: pip install "crewforge @ git+https://github.com/aimanmalib/crewforge.git"
 
 export OPENAI_API_KEY=sk-...          # or any provider below
 crewforge providers                   # list presets and the variable each one reads
