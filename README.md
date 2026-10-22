@@ -5,7 +5,7 @@
 [![CI](https://github.com/aimanmalib/crewforge/actions/workflows/ci.yml/badge.svg)](https://github.com/aimanmalib/crewforge/actions/workflows/ci.yml)
 [![PyPI](https://img.shields.io/pypi/v/crewforge)](https://pypi.org/project/crewforge/)
 [![OpenSSF Scorecard](https://api.scorecard.dev/projects/github.com/aimanmalib/crewforge/badge)](https://scorecard.dev/viewer/?uri=github.com/aimanmalib/crewforge)
-![Python 3.10–3.13](https://img.shields.io/badge/python-3.10%E2%80%933.13-blue)
+![Python 3.10–3.14](https://img.shields.io/badge/python-3.10%E2%80%933.14-blue)
 ![License: MIT](https://img.shields.io/badge/license-MIT-green)
 
 ```bash
@@ -359,7 +359,7 @@ were carried over into this repository (see [docs/porting.md](https://github.com
 for what was ported, re-targeted at the shared core, or dropped and why).
 
 The evidence that it works is meant to be checkable: the test suite (run
-`pytest`; it needs no key and no network), CI on Python 3.10–3.13, and the
+`pytest`; it needs no key and no network), CI on Python 3.10–3.14, and the
 real-provider runs shown above, two of which found bugs that were fixed with
 tests before the output was recorded.
 
