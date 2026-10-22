@@ -4,6 +4,28 @@ All notable changes to this project are documented here. The format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and the project uses
 [Semantic Versioning](https://semver.org/).
 
+## [0.2.1] - 2026-10-22
+
+No change to what the recipes do; this release makes the package easier to trust and to install.
+
+### Fixed
+- Locating the `academic` locale files now joins one path segment at a time, as
+  `importlib.resources.Traversable.joinpath` requires before Python 3.11.
+- Type errors found by mypy (narrowed optional values, typed agent registries); no behaviour change.
+
+### Added
+- Python 3.14 support (tested in CI).
+- Type checking with mypy in CI; the package ships `py.typed`.
+- README: demo GIFs for `academic` (Malay) and `ask --verify`, the architecture diagram as an image (PyPI does not
+  render Mermaid), OpenSSF Scorecard badge.
+- Fuller PyPI metadata (keywords, classifiers, project URLs); `twine check --strict` on every build.
+- Code of Conduct, OpenSSF Best Practices answers (`docs/openssf-best-practices.md`), and a 14-day acknowledgement
+  target in SECURITY.md.
+
+### Changed
+- CI installs from a hash-pinned `uv.lock`; every GitHub Action is pinned to a commit SHA; CodeQL runs on every
+  change; `main` is protected by a ruleset requiring the CI checks.
+
 ## [0.2.0] - 2026-10-22
 
 ### Added
