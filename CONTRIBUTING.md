@@ -7,11 +7,15 @@ Thanks for helping. Issues and pull requests are welcome.
 ```bash
 git clone https://github.com/aimanmalib/crewforge
 cd crewforge
-python -m venv .venv && . .venv/bin/activate   # or: uv venv
-pip install -e ".[dev,docs]"
-pytest
-ruff check . && ruff format --check .
+uv sync --extra dev --extra docs      # exact versions from uv.lock, like CI
+uv run pytest
+uv run ruff check . && uv run ruff format --check .
 ```
+
+Without uv: `python -m venv .venv && . .venv/bin/activate && pip install -e ".[dev,docs]"`
+(unpinned, so versions may differ from CI). If you change dependencies in
+`pyproject.toml`, run `uv lock` and commit `uv.lock`; CI runs `uv sync --locked`
+and fails when the lock is stale.
 
 The test suite needs no API key and no network: agent, pipeline and CLI tests
 run the real client against a fake OpenAI-compatible endpoint (the `fake_llm`
