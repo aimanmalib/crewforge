@@ -217,7 +217,7 @@ $ crewforge academic cite refs.txt --style ieee --language ms -f markdown
 
 $ crewforge academic disclose --language ms             # no LLM, no key
 ## Pernyataan Penggunaan AI
-Saya menggunakan crewforge academic (versi 0.1.0), sebuah alat berbantukan AI, dengan model ag/gemini-3.8-flash (openai), bagi bahagian tugasan berikut:
+Saya menggunakan crewforge academic (versi 0.1.0), sebuah alat berbantukan AI, dengan model gemini-3.8-flash (melalui gateway serasi OpenAI), bagi bahagian tugasan berikut:
 - 22 Oktober 2026: Perancangan: alat ini menukar taklimat tugasan (brief-ms.md) kepada 3 soalan kajian, rangka 5 bahagian dan peruntukan perkataan. ...
 ```
 
