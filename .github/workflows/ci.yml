@@ -57,5 +57,8 @@ jobs:
           python -c "import importlib.util, sys; sys.exit(importlib.util.find_spec('fastapi') is not None)"
           printf '{"openapi":"3.1.0","info":{"title":"T","version":"1"},"paths":{"/x":{"get":{"summary":"x","responses":{"200":{"description":"ok"}}}}}}' > spec.json
           crewforge validate spec.json
+          crewforge academic --help
+          printf '{"v":1,"ts":"2026-10-22T00:00:00+00:00","step":"cite","model":"m","provider":"p","inputs":[{"name":"refs.txt"}],"counts":{"references":2},"style":"apa"}\n' > log.jsonl
+          crewforge academic disclose --log log.jsonl --language ms | grep -q "Pernyataan Penggunaan AI"
           printf '{"openapi":"3.1.0","info":{"title":"T","version":"1"},"paths":{}}' > empty.json
           if crewforge validate empty.json; then echo "empty spec must fail"; exit 1; fi

@@ -155,6 +155,7 @@ class Settings(BaseModel):
     docs: dict[str, Any] = Field(default_factory=dict)
     api: dict[str, Any] = Field(default_factory=dict)
     content: dict[str, Any] = Field(default_factory=dict)
+    academic: dict[str, Any] = Field(default_factory=dict)
 
     @classmethod
     def from_yaml(cls, path: str | Path) -> Settings:

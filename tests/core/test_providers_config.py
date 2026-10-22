@@ -160,3 +160,10 @@ def test_expand_env_recurses(monkeypatch):
 def test_retry_settings_are_validated():
     assert LLMConfig(api_key="k", max_retries=0).validate_config()
     assert LLMConfig(api_key="k", timeout=0).validate_config()
+
+
+def test_academic_section_is_kept(tmp_path):
+    # The academic recipe reads its own section; an unknown section would be dropped silently.
+    cfg = tmp_path / "c.yaml"
+    cfg.write_text("academic:\n  language: ms\n")
+    assert Settings.from_yaml(cfg).academic == {"language": "ms"}

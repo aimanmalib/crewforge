@@ -5,13 +5,13 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "crewforge"
 version = "0.1.0"
-description = "One crew of LLM agents, four recipes: code review, document Q&A, API scaffolding and content — on any OpenAI-compatible provider."
+description = "One crew of LLM agents, five recipes: code review, document Q&A, API scaffolding, content and honest academic-writing help — on any OpenAI-compatible provider."
 readme = "README.md"
 license = "MIT"
 license-files = ["LICENSE"]
 requires-python = ">=3.10"
 authors = [{ name = "Muhammad Aiman" }]
-keywords = ["llm", "agents", "multi-agent", "openai", "code-review", "rag", "fastapi", "content-generation", "cli"]
+keywords = ["llm", "agents", "multi-agent", "openai", "code-review", "rag", "fastapi", "content-generation", "academic-writing", "cli"]
 classifiers = [
     "Development Status :: 3 - Alpha",
     "Environment :: Console",
@@ -61,7 +61,7 @@ crewforge = "crewforge.cli:main"
 where = ["src"]
 
 [tool.setuptools.package-data]
-crewforge = ["py.typed", "recipes/api/templates/*.j2"]
+crewforge = ["py.typed", "recipes/api/templates/*.j2", "recipes/academic/locales/*.yaml"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

@@ -1,4 +1,4 @@
-"""``crewforge`` command line: global provider options + the four recipes."""
+"""``crewforge`` command line: global provider options + the recipes."""
 
 from __future__ import annotations
 
@@ -13,6 +13,7 @@ from .cli_support import EXIT_USAGE, console, err_console, fail
 from .core.config import LLMConfig, Settings
 from .core.errors import ConfigError
 from .core.providers import ENV_API_KEY, PROVIDERS
+from .recipes.academic.cli import commands as academic_commands
 from .recipes.api.cli import commands as api_commands
 from .recipes.content.cli import commands as content_commands
 from .recipes.docs.cli import commands as docs_commands
@@ -41,7 +42,7 @@ from .recipes.review.cli import commands as review_commands
 @click.option("--verbose", "-v", is_flag=True, help="Log HTTP retries and agent progress.")
 @click.pass_context
 def main(ctx, provider, model, base_url, config_path, verbose):
-    """One crew of LLM agents, four recipes, any OpenAI-compatible provider.
+    """One crew of LLM agents, five recipes, any OpenAI-compatible provider.
 
     \b
     Recipes:
@@ -52,6 +53,7 @@ def main(ctx, provider, model, base_url, config_path, verbose):
       scaffold   natural language -> FastAPI project + OpenAPI spec
       validate   check an OpenAPI spec (and a scaffolded app) offline
       write      research -> outline -> write -> SEO -> edit -> quality -> publish
+      academic   plan / feedback / cite / disclose for your own assignment
 
     API keys are read from the environment only (e.g. OPENAI_API_KEY) and are
     never written to disk. Exit codes: 0 ok, 1 run failed, 2 usage/config error.
@@ -120,7 +122,13 @@ def init(ctx, output, force):
     )
 
 
-for _cmd in (*review_commands, *docs_commands, *api_commands, *content_commands):
+for _cmd in (
+    *review_commands,
+    *docs_commands,
+    *api_commands,
+    *content_commands,
+    *academic_commands,
+):
     main.add_command(_cmd)
 
 
