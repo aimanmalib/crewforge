@@ -14,9 +14,9 @@ crewforge write "Why unit tests matter" -f markdown -f html
 ```
 
 <p align="center">
-  <img src="docs/demo/review.gif" alt="Terminal demo: crewforge review on a login function finds the SQL injection (CWE-89) as critical and requests changes" width="900">
+  <img src="https://raw.githubusercontent.com/aimanmalib/crewforge/main/docs/demo/review.gif" alt="Terminal demo: crewforge review on a login function finds the SQL injection (CWE-89) as critical and requests changes" width="900">
 </p>
-<p align="center"><sub>A real run of <code>crewforge review</code>: seven agents, ~25 s, provider-reported tokens. Recorded with <a href="https://github.com/charmbracelet/vhs">VHS</a> from <a href="docs/demo/review.tape"><code>docs/demo/review.tape</code></a> using Gemini 3.8 Flash through an OpenAI-compatible gateway (the <code>custom</code> provider). The wait for the model is shown in full.</sub></p>
+<p align="center"><sub>A real run of <code>crewforge review</code>: seven agents, ~25 s, provider-reported tokens. Recorded with <a href="https://github.com/charmbracelet/vhs">VHS</a> from <a href="https://github.com/aimanmalib/crewforge/blob/main/docs/demo/review.tape"><code>docs/demo/review.tape</code></a> using Gemini 3.8 Flash through an OpenAI-compatible gateway (the <code>custom</code> provider). The wait for the model is shown in full.</sub></p>
 
 ## Why one crew, four recipes
 
@@ -286,7 +286,7 @@ Exit codes: `0` success · `1` run failed (agent, validator or provider) · `2`
 usage or configuration error (bad flag, unknown provider, missing key).
 
 The guards are covered by tests that were checked by removing each guard and
-watching them fail; see [docs/porting.md](docs/porting.md#honest-failure-guards-and-the-sabotage-check).
+watching them fail; see [docs/porting.md](https://github.com/aimanmalib/crewforge/blob/main/docs/porting.md#honest-failure-guards-and-the-sabotage-check).
 
 ## How this was built
 
@@ -296,7 +296,7 @@ the same author — [codeguard](https://github.com/aimanmalib/codeguard),
 [documind](https://github.com/aimanmalib/documind),
 [apiforge](https://github.com/aimanmalib/apiforge) and
 [contentforge](https://github.com/aimanmalib/contentforge) — whose test suites
-were carried over into this repository (see [docs/porting.md](docs/porting.md)
+were carried over into this repository (see [docs/porting.md](https://github.com/aimanmalib/crewforge/blob/main/docs/porting.md)
 for what was ported, re-targeted at the shared core, or dropped and why).
 
 The evidence that it works is meant to be checkable: the test suite (run
@@ -306,7 +306,7 @@ tests before the output was recorded.
 
 ## Contributing
 
-See [CONTRIBUTING.md](CONTRIBUTING.md). In short: `pip install -e ".[dev,docs]"`,
+See [CONTRIBUTING.md](https://github.com/aimanmalib/crewforge/blob/main/CONTRIBUTING.md). In short: `pip install -e ".[dev,docs]"`,
 `pytest`, `ruff check . && ruff format --check .`, and every new failure path
 needs a test that fails if the guard is removed.
 
@@ -314,12 +314,12 @@ needs a test that fails if the guard is removed.
 
 Please report vulnerabilities privately through
 [GitHub private vulnerability reporting](https://github.com/aimanmalib/crewforge/security/advisories/new).
-See [SECURITY.md](SECURITY.md) for scope notes (what is sent to your provider,
+See [SECURITY.md](https://github.com/aimanmalib/crewforge/blob/main/SECURITY.md) for scope notes (what is sent to your provider,
 and what `validate` executes).
 
 ## License
 
-[MIT](LICENSE) © Muhammad Aiman
+[MIT](https://github.com/aimanmalib/crewforge/blob/main/LICENSE) © Muhammad Aiman
 
 ---
 
