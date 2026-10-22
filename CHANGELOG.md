@@ -4,6 +4,24 @@ All notable changes to this project are documented here. The format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and the project uses
 [Semantic Versioning](https://semver.org/).
 
+## [Unreleased]
+
+### Added
+- `academic` recipe: `crewforge academic plan | feedback | cite | disclose`, an
+  honest academic-writing assistant that replaces
+  [hermes-mimo-writer](https://github.com/gnpa910/hermes-mimo-writer). It plans
+  from a brief (research questions, outline, a word budget that adds up,
+  sources to find), comments on the user's own draft without rewriting it,
+  formats references the user supplies (APA 7, IEEE, Harvard) without adding
+  any, and writes an AI-use statement from a record of the steps it ran.
+  Output in English or Malaysian Malay (`--language en|ms`). Sources the model
+  proposes are labelled UNVERIFIED, or LIKELY FABRICATED without a DOI, URL or
+  ISBN; nothing is ever shown as verified. The old project's essay drafting,
+  style mimicry and "AI-detector" sanitiser were deliberately dropped; see
+  [docs/porting.md](docs/porting.md#academic-from-hermes-mimo-writer).
+- `academic:` section in `crewforge.yaml` (language, citation style, log file,
+  input and suggestion limits).
+
 ## [0.1.0] - 2026-10-22
 
 First version: one framework replacing four separate tools

@@ -2,7 +2,9 @@
 
 crewforge consolidates four earlier tools by the same author. This page records
 how their test suites were carried over, so the claim "the old guarantees still
-hold" can be checked rather than trusted.
+hold" can be checked rather than trusted. The `academic` recipe, added later,
+replaces a fifth project and is recorded [at the end](#academic-from-hermes-mimo-writer):
+unlike the other four, most of that project was deliberately not carried over.
 
 | Source repo | Tests on `main` | Carried over | Dropped | Where they live now |
 |---|---|---|---|---|
@@ -61,3 +63,73 @@ run, and the guard was restored:
 With the first guard removed, `review`, `scaffold` and `write` still failed
 because their agents must return parseable JSON (a second, independent guard);
 `ask` and `summarize` would have reported success with an empty answer.
+
+## `academic` (from hermes-mimo-writer)
+
+[hermes-mimo-writer](https://github.com/gnpa910/hermes-mimo-writer) was a
+seven-agent "academic writing pipeline": give it an assignment brief and some
+of your own writing, receive a finished, cited essay as a `.docx` that its
+README described as "AI-detector-resistant". Read at commit `e8b6015`
+(54 tests). It was not modified.
+
+crewforge will not help anyone pass off AI text as their own or evade AI
+detectors, so the recipe is a different tool built from the honest parts: it
+helps a student plan and improve **their own** work and records what it did so
+the student can disclose it.
+
+### Kept
+
+| Old | Now | What changed |
+|---|---|---|
+| `BriefParserAgent` | `brief` agent (`academic plan`) | Same job. A brief with no title, or a reply in prose, now fails naming `brief` instead of raising a bare `ValueError`. Citation styles are APA 7, IEEE and Harvard (MLA/Chicago dropped for a smaller, tested surface). |
+| `OutlineDrafterAgent` | `planner` agent (`academic plan`) | Adds research questions, the kinds of sources to find, and database search queries. The word budget is computed in code so it always adds up to the target (the old prompt asked the model to do the arithmetic). Headings no longer carry the model's own numbering. |
+| `sources_hint` | `source_needs`, `search_queries`, `suggested_readings` | Any reading the model proposes is labelled UNVERIFIED, and LIKELY FABRICATED when it has no DOI, URL or valid ISBN. |
+| `CitationManagerAgent` | `formatter` agent (`academic cite`) | Inverted: it formats only references the user supplies, may not skip one (the run fails naming `formatter`) or add one (discarded and reported), and any DOI/URL/ISBN it adds is flagged. |
+| Localised references heading (en/id/ms/zh) | `--language en\|ms` | Output in English or standard **Malaysian** Malay; every label is in `locales/{en,ms}.yaml`. Malay output is checked against a list of Indonesian forms (`karena`, `-itas`, `dosen`, ...), because the old prompts treated Malay and Indonesian as near-interchangeable. |
+| Per-agent token ledger | core `UsageTracker` | Provider-reported numbers only. |
+
+### Dropped, and why
+
+| Old feature | Why it is not in crewforge |
+|---|---|
+| `AISanitizerAgent` and the `web/` sanitizer demo (`/api/sanitize`) | Their only purpose was to make AI-generated prose "indistinguishable from human academic writing" so detectors (GPTZero, Turnitin AI, Copyleaks) would miss it. That is help with academic misconduct; there is no honest version of it. |
+| `ContentDrafterAgent` | It wrote the essay the student would submit, and its prompt told the model to "invent author/year that's plausible" for citations. Ghost-writing plus fabricated citations. `academic feedback` comments on the student's own draft instead, and its reviewers are told not to rewrite. |
+| `StyleProfilerAgent` | It fingerprinted the student's past writing so the generated essay would sound like them, which only serves passing generated text off as their own. Feedback on clarity and register of the student's own draft is the honest counterpart. |
+| `DocxAssemblerAgent` | It assembled the generated essay into a submission-ready file. With no generated essay there is nothing to assemble; results are Markdown, text or JSON. |
+| "Plausible" reference synthesis in `CitationManagerAgent` | The prompt asked for "plausible academic title[s]" and "real-world publishers" for keys the drafter had made up. The module docstring promised a plausibility check that the code never performed. Replaced by the identifier-based labelling above. |
+| `estimate` command | Hand-typed token and price heuristics; crewforge reports provider usage only. |
+| `health` command, MiMo client, `.env` settings | Covered by the core: the `mimo` provider preset, `crewforge providers`, `crewforge.yaml`. |
+| Indonesian (`id`) and Chinese (`zh`) output | Out of scope for now; the owner's audience is Malaysian. Adding a language is a new locale file plus tests. |
+
+### New in the recipe
+
+- `academic feedback`: four reviewers (structure, argument, clarity, citations)
+  that return comments tied to a paragraph and an exact quote. The code checks
+  each quote against the draft (re-pointing a wrong paragraph number, flagging
+  a quote that is not there) and cuts suggestions longer than
+  `academic.max_suggestion_words`, so feedback cannot turn into a rewrite. A
+  deterministic pass cross-checks in-text citations against the reference list.
+- `academic disclose`: an AI-use statement generated without an LLM from the
+  usage log that `plan`, `feedback` and `cite` append to
+  (`crewforge-academic-log.jsonl`: step, date, model, input file names and
+  SHA-256, counts; never content, keys or URLs). It refuses to write a
+  statement when nothing was recorded, and ends with a checklist the student
+  must confirm (sources checked, text is their own, course allows this use).
+
+### Tests
+
+None of the 54 old tests were carried over. 18 test dropped features
+(sanitizer 3, drafter 5, style profiler 4, DOCX assembler 4, the pipeline that
+chained them 2) and 10 test the MiMo client and `.env` settings that the core
+replaces and tests itself. The other 26 test the old JSON helper and pydantic
+models, which were rewritten rather than ported (the core's `parse_json` covers
+the helper), and `test_citation_manager_resolves_keys` asserted that invented
+references come back as a bibliography, the behaviour that was inverted. The
+recipe has its own tests in `tests/recipes/academic/`.
+
+The fabricated-citation guard (`check_source` in
+`recipes/academic/citations.py`) was checked by removing it: 6 tests went red,
+including `TestFabricationGuard::test_model_source_without_identifier_is_flagged`,
+`test_flagged_reading_is_never_presented_as_verified` (CLI) and
+`test_plan_budget_readings_and_two_agents`; restoring it made the suite green.
+

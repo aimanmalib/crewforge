@@ -1,0 +1,122 @@
+# User-facing text for `crewforge academic` in English.
+# Every string a student sees lives here (and in ms.yaml), not in the code.
+# Placeholders in {braces} are filled by the code; keep them when translating.
+
+language_name: English
+
+# Appended to every agent's system prompt.
+llm_instruction: >-
+  Write every human-readable value in clear, formal academic English. Keep the
+  JSON keys exactly as specified. Copy any quotation from the user's text
+  verbatim, in its original language.
+
+months: [January, February, March, April, May, June, July, August, September, October, November, December]
+
+styles:
+  apa: APA 7th edition
+  ieee: IEEE
+  harvard: Harvard
+
+reviewers:
+  structure: Structure
+  argument: Argument
+  clarity: Clarity
+  citations: Citations
+
+labels:
+  plan_title: "Assignment plan: {title}"
+  course: Course
+  target_words: Target length
+  words_unit: words
+  no_word_target: "no word count found in the brief; the budget is the planner's own estimate"
+  citation_style: Citation style
+  deadline: Deadline
+  requirements: Requirements from the brief
+  rubric: Marking rubric
+  research_questions: Research questions
+  outline: Outline and word budget
+  section: Section
+  words: Words
+  purpose: Purpose
+  budget_total: "Total: {total} words"
+  source_needs: Sources you need to find
+  search_queries: Search queries to start with
+  suggested_readings: Suggested readings (UNVERIFIED)
+  suggested_readings_warning: >-
+    The AI proposed these. They may not exist, or may not say what is claimed.
+    Check each one in your library database or with its DOI before you cite it.
+  feedback_title: "Feedback on {name}"
+  feedback_note: >-
+    These are comments on your draft. The tool does not rewrite it: the
+    decisions and the wording stay yours.
+  strengths: What works
+  comments: Comments
+  paragraph: Paragraph
+  whole_draft: Whole draft
+  suggestion: Suggestion
+  severity_major: major
+  severity_minor: minor
+  quote_not_found: "this quote was not found in your draft; treat the comment with care"
+  paragraph_out_of_range: "the reviewer pointed to a paragraph that does not exist"
+  suggestion_trimmed: "suggestion shortened (the tool comments, it does not rewrite)"
+  citation_check: Citation check (no AI)
+  in_text_found: "In-text citations found: {count}"
+  references_found: "Reference list entries found: {count}"
+  no_reference_list: "No reference list heading was found (e.g. 'References')."
+  cited_not_listed: Cited in the text but not in the reference list
+  listed_not_cited: In the reference list but never cited
+  reference_notes: Notes on your reference entries
+  failed_reviewers: "Reviewers that failed and were skipped: {names}"
+  cite_title: "References ({style})"
+  cite_note: >-
+    These are the references you supplied, formatted. The tool cannot check
+    online that they exist; it never adds references of its own.
+  discarded: "The formatter returned {count} reference(s) you did not supply; they were discarded."
+  missing_fields: "Missing details to add"
+  recorded: "Recorded this step in {path} (for `crewforge academic disclose`)."
+  malay_warning: "Indonesian forms found in the Malay output: {found}"
+
+statuses:
+  supplied: "supplied by you (not checked online)"
+  unverified: "UNVERIFIED: proposed or altered by the AI, check it"
+  flagged: "LIKELY FABRICATED: proposed by the AI with no DOI, URL or ISBN"
+
+flags:
+  no_identifier: "no DOI, URL or ISBN; add one if the source has it"
+  invalid_isbn: "ISBN checksum is wrong: {values}"
+  identifier_added_by_ai: "the AI added identifier(s) you did not supply: {values}"
+  identifier_dropped: "the formatted entry lost identifier(s) you supplied: {values}"
+
+disclosure:
+  heading: AI-use statement
+  intro: >-
+    I used {tool} (version {version}), an AI-assisted tool, with the model
+    {models}, for the following parts of this assignment:
+  steps:
+    plan: >-
+      Planning: the tool turned the assignment brief ({inputs}) into
+      {research_questions} research question(s), an outline of {sections}
+      section(s) and a word budget.
+    plan_readings: >-
+      It proposed {suggested_readings} reading(s), labelled as unverified.
+    plan_readings_flagged: >-
+      {flagged_readings} of them had no DOI, URL or ISBN and were flagged as
+      likely fabricated.
+    feedback: >-
+      Feedback on my draft ({inputs}): the tool commented on structure,
+      argument, clarity and citations ({comments} comment(s)). It did not
+      rewrite the draft.
+    cite: >-
+      Reference formatting: the tool formatted {references} reference(s) that
+      I supplied ({inputs}) into {style} style. It did not add references.
+  tool_limits: >-
+    The tool does not generate essay text. Any wording I took from its plan or
+    comments is my responsibility.
+  checklist_heading: Before you submit, confirm and then delete this section
+  checklist:
+    - I checked that every source the tool suggested exists and supports my point, or I did not use it.
+    - The submitted text is my own writing; where I adopted a suggested wording, I have said so above.
+    - My course or institution allows these uses of AI (check the course guide or ask your lecturer).
+  empty: >-
+    No recorded AI use was found in {path}. Nothing was generated: if you used
+    AI tools elsewhere, disclose that yourself.

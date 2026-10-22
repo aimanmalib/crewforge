@@ -1,0 +1,174 @@
+# Teks pengguna untuk `crewforge academic` dalam Bahasa Melayu (Malaysia).
+# Setiap ayat yang dilihat pelajar ada di sini (dan dalam en.yaml), bukan dalam kod.
+# Pemegang tempat dalam {kurungan} diisi oleh kod; kekalkannya semasa menterjemah.
+
+language_name: Bahasa Melayu
+
+# Ditambah pada arahan sistem setiap ejen. Ditulis dalam bahasa Inggeris kerana
+# itu arahan kepada model, bukan teks untuk pelajar.
+llm_instruction: >-
+  Write every human-readable value in standard Malaysian Malay (Bahasa Melayu
+  as used in Malaysia, following Dewan Bahasa dan Pustaka spelling), NOT
+  Indonesian. Use Malaysian forms, for example: kerana (not karena), pensyarah
+  (not dosen), universiti (not universitas), kualiti (not kualitas), aktiviti
+  (not aktivitas), pelbagai (not berbagai), rujukan (not referensi), kajian or
+  penyelidikan (not penelitian), esei (not esai), akademik (not akademis),
+  kaedah (not metode), dalam talian (not daring), berkaitan (not terkait),
+  seperti berikut (not sebagai berikut). Keep the JSON keys exactly as
+  specified, in English. Copy any quotation from the user's text verbatim, in
+  its original language.
+
+months: [Januari, Februari, Mac, April, Mei, Jun, Julai, Ogos, September, Oktober, November, Disember]
+
+styles:
+  apa: APA edisi ke-7
+  ieee: IEEE
+  harvard: Harvard
+
+reviewers:
+  structure: Struktur
+  argument: Hujah
+  clarity: Kejelasan
+  citations: Sitasi
+
+labels:
+  plan_title: "Pelan tugasan: {title}"
+  course: Kursus
+  target_words: Panjang sasaran
+  words_unit: perkataan
+  no_word_target: "tiada bilangan perkataan ditemui dalam taklimat; peruntukan ini ialah anggaran perancang sendiri"
+  citation_style: Gaya sitasi
+  deadline: Tarikh akhir
+  requirements: Keperluan daripada taklimat tugasan
+  rubric: Rubrik pemarkahan
+  research_questions: Soalan kajian
+  outline: Rangka dan peruntukan perkataan
+  section: Bahagian
+  words: Perkataan
+  purpose: Tujuan
+  budget_total: "Jumlah: {total} perkataan"
+  source_needs: Sumber yang perlu anda cari
+  search_queries: Kata carian untuk bermula
+  suggested_readings: Bacaan cadangan (BELUM DISAHKAN)
+  suggested_readings_warning: >-
+    Senarai ini dicadangkan oleh AI. Sumber ini mungkin tidak wujud, atau
+    mungkin tidak menyatakan apa yang didakwa. Semak setiap satu dalam pangkalan
+    data perpustakaan atau melalui DOI sebelum anda memetiknya.
+  feedback_title: "Maklum balas untuk {name}"
+  feedback_note: >-
+    Ini ialah ulasan tentang draf anda. Alat ini tidak menulis semula draf
+    tersebut: keputusan dan susunan kata kekal milik anda.
+  strengths: Kekuatan
+  comments: Ulasan
+  paragraph: Perenggan
+  whole_draft: Keseluruhan draf
+  suggestion: Cadangan
+  severity_major: utama
+  severity_minor: kecil
+  quote_not_found: "petikan ini tidak ditemui dalam draf anda; nilai ulasan ini dengan berhati-hati"
+  paragraph_out_of_range: "penyemak merujuk perenggan yang tidak wujud"
+  suggestion_trimmed: "cadangan dipendekkan (alat ini memberi ulasan, bukan menulis semula)"
+  citation_check: Semakan sitasi (tanpa AI)
+  in_text_found: "Sitasi dalam teks ditemui: {count}"
+  references_found: "Entri senarai rujukan ditemui: {count}"
+  no_reference_list: "Tajuk senarai rujukan tidak ditemui (cth. 'Rujukan')."
+  cited_not_listed: Disitasi dalam teks tetapi tiada dalam senarai rujukan
+  listed_not_cited: Ada dalam senarai rujukan tetapi tidak pernah disitasi
+  reference_notes: Catatan tentang entri rujukan anda
+  failed_reviewers: "Penyemak yang gagal dan dilangkau: {names}"
+  cite_title: "Rujukan ({style})"
+  cite_note: >-
+    Ini ialah rujukan yang anda berikan, telah diformat. Alat ini tidak dapat
+    menyemak dalam talian sama ada rujukan itu wujud, dan ia tidak menambah
+    rujukan sendiri.
+  discarded: "Pemformat memulangkan {count} rujukan yang tidak anda berikan; rujukan itu telah dibuang."
+  missing_fields: "Butiran yang perlu ditambah"
+  recorded: "Langkah ini direkodkan dalam {path} (untuk `crewforge academic disclose`)."
+  malay_warning: "Bentuk bahasa Indonesia ditemui dalam output bahasa Melayu: {found}"
+
+statuses:
+  supplied: "diberikan oleh anda (tidak disemak dalam talian)"
+  unverified: "BELUM DISAHKAN: dicadangkan atau diubah oleh AI, semak sendiri"
+  flagged: "KEMUNGKINAN REKAAN: dicadangkan oleh AI tanpa DOI, URL atau ISBN"
+
+flags:
+  no_identifier: "tiada DOI, URL atau ISBN; tambah jika sumber itu memilikinya"
+  invalid_isbn: "nombor semak ISBN salah: {values}"
+  identifier_added_by_ai: "AI menambah pengecam yang tidak anda berikan: {values}"
+  identifier_dropped: "entri yang diformat kehilangan pengecam yang anda berikan: {values}"
+
+disclosure:
+  heading: Pernyataan Penggunaan AI
+  intro: >-
+    Saya menggunakan {tool} (versi {version}), sebuah alat berbantukan AI,
+    dengan model {models}, bagi bahagian tugasan berikut:
+  steps:
+    plan: >-
+      Perancangan: alat ini menukar taklimat tugasan ({inputs}) kepada
+      {research_questions} soalan kajian, rangka {sections} bahagian dan
+      peruntukan perkataan.
+    plan_readings: >-
+      Alat ini mencadangkan {suggested_readings} bahan bacaan yang dilabel
+      sebagai belum disahkan.
+    plan_readings_flagged: >-
+      Sebanyak {flagged_readings} daripadanya tiada DOI, URL atau ISBN dan
+      ditanda sebagai kemungkinan rekaan.
+    feedback: >-
+      Maklum balas tentang draf saya ({inputs}): alat ini memberi ulasan
+      tentang struktur, hujah, kejelasan dan sitasi ({comments} ulasan). Alat
+      ini tidak menulis semula draf tersebut.
+    cite: >-
+      Pemformatan rujukan: alat ini memformat {references} rujukan yang saya
+      berikan ({inputs}) mengikut gaya {style}. Alat ini tidak menambah
+      rujukan.
+  tool_limits: >-
+    Alat ini tidak menjana teks esei. Sebarang susunan kata yang saya ambil
+    daripada pelan atau ulasannya adalah tanggungjawab saya.
+  checklist_heading: Sebelum menghantar, sahkan perkara berikut dan kemudian padam bahagian ini
+  checklist:
+    - Saya telah menyemak bahawa setiap sumber yang dicadangkan oleh alat ini wujud dan menyokong hujah saya, atau saya tidak menggunakannya.
+    - Teks yang dihantar ialah tulisan saya sendiri; jika saya menggunakan susunan kata yang dicadangkan, saya telah menyatakannya di atas.
+    - Kursus atau institusi saya membenarkan penggunaan AI sebegini (semak panduan kursus atau tanya pensyarah).
+  empty: >-
+    Tiada rekod penggunaan AI ditemui dalam {path}. Tiada pernyataan dijana:
+    jika anda menggunakan alat AI di tempat lain, nyatakannya sendiri.
+
+# Bentuk bahasa Indonesia yang tidak lazim dalam Bahasa Melayu Malaysia, dengan
+# padanan Malaysia. Output model dalam bahasa Melayu disemak dengan senarai ini
+# (amaran sahaja). Tambah atau buang entri di sini, bukan dalam kod.
+indonesian_forms:
+  karena: kerana
+  dosen: pensyarah
+  mata kuliah: kursus
+  makalah: kertas kerja
+  skripsi: tesis
+  esai: esei
+  akademis: akademik
+  sistematis: sistematik
+  teoritis: teoretikal
+  analisa: analisis
+  praktek: amalan
+  referensi: rujukan
+  penelitian: kajian
+  peneliti: pengkaji
+  terkait: berkaitan
+  sebagai berikut: seperti berikut
+  daring: dalam talian
+  luring: bersemuka
+  mendukung: menyokong
+  dukungan: sokongan
+  berbagai: pelbagai
+  memperhatikan: memerhatikan
+  metode: kaedah
+  standar: standard
+  saran: cadangan
+  mengoptimalkan: mengoptimumkan
+  optimal: optimum
+  Maret: Mac
+  Juni: Jun
+  Juli: Julai
+  Agustus: Ogos
+  Desember: Disember
+# Akhiran: kata Indonesia "-itas" (kualitas, aktivitas, universitas) = "-iti" di Malaysia.
+indonesian_suffixes:
+  itas: iti
