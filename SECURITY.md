@@ -7,7 +7,8 @@ Please report vulnerabilities **privately** through GitHub's
 (Security tab → "Report a vulnerability"). Do not open a public issue.
 
 Include what you found, how to reproduce it, and the impact you expect. You will
-get an acknowledgement, and a fix or a decision, as soon as it has been looked at.
+get an acknowledgement within 14 days, and a fix or a decision after that. Fixes for
+confirmed vulnerabilities are released as soon as they are ready and named in the CHANGELOG.
 
 ## Supported versions
 
