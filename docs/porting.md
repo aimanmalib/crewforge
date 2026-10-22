@@ -66,7 +66,7 @@ because their agents must return parseable JSON (a second, independent guard);
 
 ## `academic` (from hermes-mimo-writer)
 
-[hermes-mimo-writer](https://github.com/gnpa910/hermes-mimo-writer) was a
+hermes-mimo-writer (an earlier, now retired project) was a
 seven-agent "academic writing pipeline": give it an assignment brief and some
 of your own writing, receive a finished, cited essay as a `.docx` that its
 README described as "AI-detector-resistant". Read at commit `e8b6015`

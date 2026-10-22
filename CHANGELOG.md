@@ -4,12 +4,12 @@ All notable changes to this project are documented here. The format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and the project uses
 [Semantic Versioning](https://semver.org/).
 
-## [Unreleased]
+## [0.2.0] - 2026-10-22
 
 ### Added
 - `academic` recipe: `crewforge academic plan | feedback | cite | disclose`, an
   honest academic-writing assistant that replaces
-  [hermes-mimo-writer](https://github.com/gnpa910/hermes-mimo-writer). It plans
+  hermes-mimo-writer (an earlier, now retired project). It plans
   from a brief (research questions, outline, a word budget that adds up,
   sources to find), comments on the user's own draft without rewriting it,
   formats references the user supplies (APA 7, IEEE, Harvard) without adding
