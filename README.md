@@ -114,6 +114,11 @@ total   7 calls   22,366 tokens (provider-reported)
 
 ### `ask` and `summarize`
 
+<p align="center">
+  <img src="https://raw.githubusercontent.com/aimanmalib/crewforge/main/docs/demo/ask.gif" alt="Terminal demo: crewforge ask --verify answers two questions about a short project brief with [Source N] citations; the second answer says the document does not give the cost, and both answers are fact-checked claim by claim" width="900">
+</p>
+<p align="center"><sub>A real run of <code>crewforge ask --verify</code>: the answerer cites the passages it used as <code>[Source N]</code>, a second agent checks every claim against those passages, and the question the document does not answer is answered as such. Provider-reported tokens. Recorded with <a href="https://github.com/charmbracelet/vhs">VHS</a> from <a href="https://github.com/aimanmalib/crewforge/blob/main/docs/demo/ask.tape"><code>docs/demo/ask.tape</code></a> (the document is invented) using Gemini 3.8 Flash through an OpenAI-compatible gateway (the <code>custom</code> provider). The wait for the model is shown in full.</sub></p>
+
 ```text
 $ crewforge ask kestrel.md -q "How many sensors does Project Kestrel use, and who leads it?" --verify --export session.md
 ✓ ingested kestrel.md (1 chunks)
@@ -184,6 +189,11 @@ English or Malaysian Malay (`--language en|ms`; Malay output is checked for
 Indonesian forms such as *karena* or *kualitas*). Every step is recorded
 (file names and hashes, never content or keys) so `disclose` can write the
 AI-use statement many universities now ask for.
+
+<p align="center">
+  <img src="https://raw.githubusercontent.com/aimanmalib/crewforge/main/docs/demo/academic.gif" alt="Terminal demo: crewforge academic feedback --language ms comments in Malay on a student's essay draft, quoting the sentences it refers to, then a no-AI citation check lists (Lim, 2024) as cited in the text but missing from the reference list" width="900">
+</p>
+<p align="center"><sub>A real run of <code>crewforge academic feedback --language ms</code> on a short essay draft in Malay. Each comment quotes the student's own sentence and suggests a fix; nothing is rewritten. The citation check after it uses no AI: it finds <em>(Lim, 2024)</em> cited in the text but missing from the reference list. Only the <code>argument</code> reviewer is run so the result fits on one screen. Recorded with <a href="https://github.com/charmbracelet/vhs">VHS</a> from <a href="https://github.com/aimanmalib/crewforge/blob/main/docs/demo/academic.tape"><code>docs/demo/academic.tape</code></a> (draft, brief and reference are invented) using Gemini 3.8 Flash through an OpenAI-compatible gateway (the <code>custom</code> provider). The wait for the model is shown in full.</sub></p>
 
 ```text
 $ crewforge academic plan brief.md -f markdown          # a 1,200-word TSL3013 essay brief
