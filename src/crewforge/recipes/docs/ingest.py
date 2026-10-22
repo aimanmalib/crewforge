@@ -95,14 +95,14 @@ class IngestAgent:
             import pymupdf
         except ImportError:
             try:
-                import fitz as pymupdf  # older PyMuPDF releases
+                import fitz as pymupdf  # type: ignore[no-redef]  # older PyMuPDF releases
             except ImportError as exc:
                 raise ConfigError(
                     f"reading PDF files needs PyMuPDF: {_DOCS_EXTRA} ({path.name})"
                 ) from exc
         doc = pymupdf.open(str(path))
         try:
-            return "\n\n".join(page.get_text() for page in doc)
+            return "\n\n".join(page.get_text() for page in doc.pages())
         finally:
             doc.close()
 

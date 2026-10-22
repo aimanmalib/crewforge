@@ -312,7 +312,7 @@ REVIEW_AGENTS: list[str] = [
     "documentation",
 ]
 
-AGENT_REGISTRY: dict[str, type[Agent]] = {
+AGENT_REGISTRY: dict[str, type[ReviewerAgent] | type[SummaryAgent]] = {
     "security": SecurityAgent,
     "style": StyleAgent,
     "complexity": ComplexityAgent,
@@ -323,7 +323,7 @@ AGENT_REGISTRY: dict[str, type[Agent]] = {
 }
 
 
-def get_agent(name: str, **kwargs: Any) -> Agent:
+def get_agent(name: str, **kwargs: Any) -> ReviewerAgent | SummaryAgent:
     """Instantiate a review agent by name (``client=``, ``tracker=`` keyword args)."""
     cls = AGENT_REGISTRY.get(name)
     if cls is None:

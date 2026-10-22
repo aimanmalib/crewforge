@@ -28,7 +28,9 @@ def locale(lang: str) -> dict[str, Any]:
         raise ConfigError(f"language must be one of {', '.join(LANGUAGES)}, not '{lang}'")
     text = (
         resources.files("crewforge.recipes.academic")
-        .joinpath("locales", f"{lang}.yaml")
+        # One segment per call: Traversable.joinpath takes a single child before 3.11.
+        .joinpath("locales")
+        .joinpath(f"{lang}.yaml")
         .read_text(encoding="utf-8")
     )
     return yaml.safe_load(text)
