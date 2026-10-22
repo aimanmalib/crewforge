@@ -11,11 +11,29 @@ license = "MIT"
 license-files = ["LICENSE"]
 requires-python = ">=3.10"
 authors = [{ name = "Muhammad Aiman" }]
-keywords = ["llm", "agents", "multi-agent", "openai", "code-review", "rag", "fastapi", "content-generation", "academic-writing", "cli"]
+keywords = [
+    "llm",
+    "agents",
+    "multi-agent",
+    "ai-agents",
+    "openai",
+    "openai-compatible",
+    "code-review",
+    "rag",
+    "document-qa",
+    "fastapi",
+    "api-scaffolding",
+    "content-generation",
+    "academic-writing",
+    "cli",
+]
 classifiers = [
     "Development Status :: 3 - Alpha",
     "Environment :: Console",
     "Intended Audience :: Developers",
+    "Intended Audience :: Education",
+    "Natural Language :: English",
+    "Natural Language :: Malay",
     "Operating System :: OS Independent",
     "Programming Language :: Python :: 3",
     "Programming Language :: Python :: 3 :: Only",
@@ -24,8 +42,11 @@ classifiers = [
     "Programming Language :: Python :: 3.12",
     "Programming Language :: Python :: 3.13",
     "Programming Language :: Python :: 3.14",
+    "Topic :: Education",
     "Topic :: Scientific/Engineering :: Artificial Intelligence",
+    "Topic :: Software Development :: Code Generators",
     "Topic :: Software Development :: Quality Assurance",
+    "Topic :: Text Processing :: General",
     "Typing :: Typed",
 ]
 dependencies = [
@@ -53,9 +74,11 @@ dev = [
 
 [project.urls]
 Homepage = "https://github.com/aimanmalib/crewforge"
-Repository = "https://github.com/aimanmalib/crewforge"
-Issues = "https://github.com/aimanmalib/crewforge/issues"
+Documentation = "https://github.com/aimanmalib/crewforge#readme"
 Changelog = "https://github.com/aimanmalib/crewforge/blob/main/CHANGELOG.md"
+Issues = "https://github.com/aimanmalib/crewforge/issues"
+Source = "https://github.com/aimanmalib/crewforge"
+Security = "https://github.com/aimanmalib/crewforge/security/policy"
 
 [project.scripts]
 crewforge = "crewforge.cli:main"
