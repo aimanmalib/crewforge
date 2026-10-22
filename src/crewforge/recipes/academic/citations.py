@@ -66,12 +66,13 @@ class Identifiers:
 def identifiers(text: str) -> Identifiers:
     """Find the identifiers in a reference. URLs pointing at doi.org count as the DOI."""
     dois = {_strip_trailing(m.group(1)).lower() for m in _DOI.finditer(text)}
-    urls = set()
+    urls: set[str] = set()
     for m in _URL.finditer(text):
         url = _strip_trailing(m.group(0)).rstrip("/")
         if not any(host in url.lower() for host in _DOI_HOSTS):
             urls.add(url)
-    valid, invalid = set(), set()
+    valid: set[str] = set()
+    invalid: set[str] = set()
     # Springer-style DOIs embed an ISBN ("10.1007/978-3-..."): search the rest only.
     rest = _URL.sub(" ", _DOI.sub(" ", text))
     raw_isbns = [m.group(1) for m in _ISBN_LABELLED.finditer(rest)]

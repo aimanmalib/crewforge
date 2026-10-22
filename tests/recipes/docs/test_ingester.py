@@ -94,3 +94,37 @@ class TestDocument:
             chunks=chunks,
         )
         assert doc.total_words == 5
+
+
+class TestBinaryFormats:
+    """Real PDF/DOCX files through the optional ``docs`` extra (skipped without it)."""
+
+    @pytest.mark.asyncio
+    async def test_pdf_pages_in_order(self, tmp_path):
+        pymupdf = pytest.importorskip("pymupdf")
+        path = tmp_path / "two-pages.pdf"
+        pdf = pymupdf.open()
+        for text in ("Alpha page one.", "Beta page two."):
+            pdf.new_page().insert_text((72, 72), text)
+        pdf.save(str(path))
+        pdf.close()
+
+        doc = await IngestAgent().run(path=path)
+
+        assert doc.file_type == "pdf"
+        assert "Alpha page one." in doc.content and "Beta page two." in doc.content
+        assert doc.content.index("Alpha") < doc.content.index("Beta")
+
+    @pytest.mark.asyncio
+    async def test_docx_paragraphs(self, tmp_path):
+        docx = pytest.importorskip("docx")
+        path = tmp_path / "note.docx"
+        document = docx.Document()
+        document.add_paragraph("First paragraph.")
+        document.add_paragraph("Second paragraph.")
+        document.save(str(path))
+
+        doc = await IngestAgent().run(path=path)
+
+        assert doc.file_type == "docx"
+        assert "First paragraph." in doc.content and "Second paragraph." in doc.content

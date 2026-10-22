@@ -178,9 +178,10 @@ class FactCheckAgent(Agent):
                     raise OutputParseError(self.name, "no claims and no overall verdict")
                 overall_verdict = _derive_overall(verdicts)
             else:
-                overall_verdict = _normalize_verdict(overall)
-                if overall_verdict is None:
+                normalized = _normalize_verdict(overall)
+                if normalized is None:
                     raise OutputParseError(self.name, f"unknown overall verdict {overall!r}")
+                overall_verdict = normalized
             issues = [
                 f"{c['verdict'].upper()}: {c.get('claim', '')}".strip()
                 for c in claims
@@ -188,13 +189,14 @@ class FactCheckAgent(Agent):
             ]
         else:
             match = _OVERALL.search(content)
-            overall_verdict = _normalize_verdict(match.group(1)) if match else None
-            if overall_verdict is None:
+            parsed = _normalize_verdict(match.group(1)) if match else None
+            if parsed is None:
                 raise OutputParseError(
                     self.name,
                     "no JSON verdict and no 'OVERALL: <verdict>' line",
                     _excerpt(content),
                 )
+            overall_verdict = parsed
             verdicts, issues = [], []
             for line in content.splitlines():
                 if _OVERALL.search(line):

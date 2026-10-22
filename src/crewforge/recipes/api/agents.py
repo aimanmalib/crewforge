@@ -493,7 +493,9 @@ class ValidateAgent:
             errors.append("Missing paths object")
         elif not paths:
             errors.append("No endpoints defined (paths is empty)")
-        info = spec.get("info") if isinstance(spec.get("info"), dict) else {}
+        info = spec.get("info")
+        if not isinstance(info, dict):
+            info = {}
         if not info.get("title"):
             errors.append("Missing API title")
         if not info.get("version"):

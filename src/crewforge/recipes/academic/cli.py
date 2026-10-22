@@ -21,6 +21,7 @@ from ...cli_support import (
     run,
 )
 from ...core.errors import ConfigError
+from ...core.usage import UsageTracker
 from ..docs.ingest import IngestAgent
 from .agents import FEEDBACK_AGENTS, STYLES
 from .citations import split_references
@@ -147,6 +148,14 @@ def _record(
     err_console.print(t(language, "labels.recorded", path=path), highlight=False, soft_wrap=True)
 
 
+def _usage(tracker: UsageTracker | None) -> int:
+    """Print the provider-reported usage table and return its token total."""
+    if tracker is None:  # every AcademicCrew result carries its tracker
+        raise RuntimeError("academic step returned no usage tracker")
+    print_usage(tracker)
+    return tracker.total_tokens
+
+
 def _header(ctx: click.Context, step: str, target: str, language: str) -> None:
     config = llm_config(ctx)
     err_console.print(
@@ -190,7 +199,7 @@ def plan_cmd(ctx, brief, words, language, style, fmt, output, log_path, no_log):
     result = run(crew.plan(text, words=words, style=style.lower() if style else None))
     _emit(plan_markdown(result), plan_dict(result), fmt, output)
     _warn_malay(result.malay_issues, language)
-    print_usage(result.tracker)
+    tokens = _usage(result.tracker)
     _record(
         ctx,
         settings,
@@ -201,7 +210,7 @@ def plan_cmd(ctx, brief, words, language, style, fmt, output, log_path, no_log):
         inputs=[(brief, text)],
         counts=result.counts(),
         style=result.style,
-        tokens=result.tracker.total_tokens,
+        tokens=tokens,
     )
 
 
@@ -252,7 +261,7 @@ def feedback_cmd(
     )
     _emit(feedback_markdown(result), feedback_dict(result), fmt, output)
     _warn_malay(result.malay_issues, language)
-    print_usage(result.tracker)
+    tokens = _usage(result.tracker)
     inputs = [(draft, text)] + ([(brief_path, brief_text)] if brief_path else [])
     _record(
         ctx,
@@ -264,7 +273,7 @@ def feedback_cmd(
         inputs=inputs,
         counts=result.counts(),
         style=result.style,
-        tokens=result.tracker.total_tokens,
+        tokens=tokens,
     )
 
 
@@ -285,7 +294,7 @@ def cite_cmd(ctx, references, language, style, fmt, output, log_path, no_log):
     crew = AcademicCrew(llm_config(ctx), language=language)
     result = run(crew.cite(refs, style=style))
     _emit(cite_markdown(result), cite_dict(result), fmt, output)
-    print_usage(result.tracker)
+    tokens = _usage(result.tracker)
     _record(
         ctx,
         settings,
@@ -296,7 +305,7 @@ def cite_cmd(ctx, references, language, style, fmt, output, log_path, no_log):
         inputs=[(references, text)],
         counts=result.counts(),
         style=style,
-        tokens=result.tracker.total_tokens,
+        tokens=tokens,
     )
 
 

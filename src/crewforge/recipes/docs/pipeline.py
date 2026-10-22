@@ -9,10 +9,11 @@ from __future__ import annotations
 
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Any
+from typing import Any, TypeVar
 
 import httpx
 
+from ...core.agent import Agent
 from ...core.client import LLMClient
 from ...core.config import LLMConfig
 from ...core.crew import Crew
@@ -33,6 +34,8 @@ from .index import IndexAgent
 from .ingest import Document, IngestAgent, TextChunk
 from .retrieve import RetrievalResult, RetrieverAgent
 from .settings import DocsSettings
+
+A = TypeVar("A", bound=Agent)
 
 
 @dataclass
@@ -62,7 +65,7 @@ class DocsPipeline:
         self._client = client
         self._transport = transport
         self._crew: Crew | None = None
-        self._llm_agents: dict[str, object] = {}
+        self._llm_agents: dict[str, Agent] = {}
         self.tracker = UsageTracker()
 
         self.ingester = IngestAgent(self.settings)
@@ -90,11 +93,12 @@ class DocsPipeline:
             self.retriever.reranker = self._crew.agent(RerankAgent)
         return self._crew
 
-    def _llm_agent(self, cls, **kwargs):
+    def _llm_agent(self, cls: type[A], **kwargs: Any) -> A:
         agent = self._llm_agents.get(cls.name)
-        if agent is None:
-            agent = self._llm_agents[cls.name] = self.crew.agent(cls, **kwargs)
-        return agent
+        if isinstance(agent, cls):
+            return agent
+        created = self._llm_agents[cls.name] = self.crew.agent(cls, **kwargs)
+        return created
 
     @property
     def answerer(self) -> AnswerAgent:
@@ -172,7 +176,9 @@ class DocsPipeline:
             crew.failures.append(failure)
             raise CrewFailedError(crew.name, [failure])
         if rerank:
-            chunks = await crew.step("reranker", self.retriever.reranker.rerank(question, chunks))
+            reranker = self.retriever.reranker
+            assert reranker is not None  # attached by the crew property above
+            chunks = await crew.step("reranker", reranker.rerank(question, chunks))
         return chunks
 
     async def ask(self, question: str, rerank: bool = False) -> Answer:

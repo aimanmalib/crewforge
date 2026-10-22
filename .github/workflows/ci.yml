@@ -21,10 +21,13 @@ jobs:
         with:
           version: "0.12.24"
           python-version: "3.12"
-      # ruff comes from uv.lock, so a new ruff release cannot change what CI enforces.
-      - run: uv sync --locked --extra dev
+      # ruff and mypy come from uv.lock, so a new release cannot change what CI enforces.
+      # The docs extra is installed so mypy checks the PyMuPDF/python-docx calls.
+      - run: uv sync --locked --extra dev --extra docs
       - run: uv run --no-sync ruff check .
       - run: uv run --no-sync ruff format --check .
+      - name: Type check (mypy, config in pyproject.toml)
+        run: uv run --no-sync mypy
 
   test:
     runs-on: ubuntu-latest

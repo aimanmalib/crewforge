@@ -13,6 +13,7 @@ cd crewforge
 uv sync --extra dev --extra docs      # exact versions from uv.lock, like CI
 uv run pytest
 uv run ruff check . && uv run ruff format --check .
+uv run mypy                           # type check (config in pyproject.toml)
 ```
 
 Without uv: `python -m venv .venv && . .venv/bin/activate && pip install -e ".[dev,docs]"`
