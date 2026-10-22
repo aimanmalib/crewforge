@@ -273,36 +273,9 @@ An unknown provider name is a configuration error, not a silent fallback.
 
 ## Architecture
 
-```mermaid
-flowchart LR
-    CLI["crewforge CLI<br/>review · ask · summarize · ingest<br/>scaffold · validate · write<br/>academic plan · feedback · cite · disclose"] --> R
+<p align="center"><img src="https://raw.githubusercontent.com/aimanmalib/crewforge/main/docs/architecture.png" alt="Architecture: the CLI dispatches to five recipes; each recipe builds a Crew of Agents on the shared core (parsing, LLMClient, LLMConfig, UsageTracker), which talks to any OpenAI-compatible provider over /chat/completions" width="100%"></p>
 
-    subgraph R["Recipes (src/crewforge/recipes)"]
-        RV[review]
-        DC[docs]
-        AP[api]
-        CT[content]
-        AC[academic]
-    end
-
-    R --> CREW
-
-    subgraph CORE["Core (src/crewforge/core)"]
-        CREW["Crew<br/>step() · parallel()<br/>names failed agents"]
-        AG["Agent<br/>ask() · ask_json()<br/>rejects empty output"]
-        PA["parsing<br/>tolerant JSON + schema"]
-        CL["LLMClient<br/>stream=false · retries 429/5xx only"]
-        US["UsageTracker<br/>provider-reported tokens"]
-        CF["LLMConfig + provider presets<br/>keys from env only"]
-        CREW --> AG
-        AG --> PA
-        AG --> CL
-        AG --> US
-        CL --> CF
-    end
-
-    CL -->|"/chat/completions"| P[("Any OpenAI-compatible provider")]
-```
+<sub>Source: [docs/architecture.mmd](https://github.com/aimanmalib/crewforge/blob/main/docs/architecture.mmd) (re-render with `scripts/render_architecture.py`).</sub>
 
 - **`core/client.py`** — one async client. It always sends `"stream": false`,
   retries only HTTP 429, 5xx and network/timeout errors (with capped exponential
