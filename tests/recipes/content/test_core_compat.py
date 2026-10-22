@@ -10,6 +10,7 @@ from __future__ import annotations
 
 import json
 import time
+from urllib.parse import urlparse
 
 import pytest
 import yaml
@@ -55,7 +56,7 @@ class TestMiMoConfig:
         assert mimo(api_key="test").headers["Content-Type"] == "application/json"
 
     def test_base_url_default(self):
-        assert "token-plan-sgp.xiaomimimo.com" in mimo(api_key="test").base_url
+        assert urlparse(mimo(api_key="test").base_url).hostname == "token-plan-sgp.xiaomimimo.com"
 
     def test_base_url_custom(self):
         assert mimo(api_key="t", base_url="https://custom.api.com/v1").base_url == (
@@ -164,7 +165,7 @@ class TestLLMConfigPresetResolution:
 
     def test_openrouter_preset(self):
         c = LLMConfig(provider="openrouter", api_key="or")
-        assert "openrouter.ai" in c.base_url and c.auth_style == "bearer"
+        assert urlparse(c.base_url).hostname == "openrouter.ai" and c.auth_style == "bearer"
 
     def test_ollama_preset(self):
         c = LLMConfig(provider="ollama")
@@ -250,7 +251,7 @@ class TestEnvConfiguration:
         monkeypatch.setenv("OPENROUTER_API_KEY", "or-key")
         llm = Settings().llm
         assert (llm.provider, llm.model, llm.api_key) == ("openrouter", "some/model", "or-key")
-        assert "openrouter.ai" in llm.base_url
+        assert urlparse(llm.base_url).hostname == "openrouter.ai"
 
     def test_from_env_defaults_to_openai(self, monkeypatch):
         monkeypatch.setenv("OPENAI_API_KEY", "sk-env")

@@ -8,6 +8,7 @@ names the apiforge test it came from where the mapping is not obvious.
 from __future__ import annotations
 
 import json
+from urllib.parse import urlparse
 
 import httpx
 import pytest
@@ -133,7 +134,7 @@ class TestPresetResolution:
 
     def test_openrouter_preset(self):
         c = LLMConfig(provider="openrouter", api_key="or")
-        assert "openrouter.ai" in c.base_url and c.auth_style == "bearer"
+        assert urlparse(c.base_url).hostname == "openrouter.ai" and c.auth_style == "bearer"
 
     def test_ollama_preset(self):
         c = LLMConfig(provider="ollama", api_key="x")
