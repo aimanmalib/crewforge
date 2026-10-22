@@ -3,6 +3,7 @@
 **One crew of LLM agents, four recipes — code review, document Q&A, API scaffolding and content — on any OpenAI-compatible provider, and it fails loudly instead of pretending.**
 
 [![CI](https://github.com/aimanmalib/crewforge/actions/workflows/ci.yml/badge.svg)](https://github.com/aimanmalib/crewforge/actions/workflows/ci.yml)
+[![PyPI](https://img.shields.io/pypi/v/crewforge)](https://pypi.org/project/crewforge/)
 ![Python 3.10–3.13](https://img.shields.io/badge/python-3.10%E2%80%933.13-blue)
 ![License: MIT](https://img.shields.io/badge/license-MIT-green)
 
