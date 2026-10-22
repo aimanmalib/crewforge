@@ -1,6 +1,6 @@
 cff-version: 1.2.0
 message: "If you use crewforge, please cite it as below."
-title: "crewforge: one crew of LLM agents, four recipes"
+title: "crewforge: one crew of LLM agents, five recipes"
 type: software
 authors:
   - given-names: Muhammad
@@ -10,8 +10,9 @@ license: MIT
 repository-code: "https://github.com/aimanmalib/crewforge"
 abstract: >-
   A Python framework for multi-agent LLM workflows on any OpenAI-compatible
-  provider, with four recipes (code review, document Q&A with citations, API
-  scaffolding, content) and honest failure as a core rule.
+  provider, with five recipes (code review, document Q&A with citations, API
+  scaffolding, content, honest academic-writing help) and honest failure as a
+  core rule.
 keywords:
   - llm
   - multi-agent
