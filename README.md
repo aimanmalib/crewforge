@@ -1,6 +1,6 @@
 # crewforge
 
-**One crew of LLM agents, four recipes — code review, document Q&A, API scaffolding and content — on any OpenAI-compatible provider, and it fails loudly instead of pretending.**
+**One crew of LLM agents, five recipes — code review, document Q&A, API scaffolding, content and honest academic-writing help — on any OpenAI-compatible provider, and it fails loudly instead of pretending.**
 
 [![CI](https://github.com/aimanmalib/crewforge/actions/workflows/ci.yml/badge.svg)](https://github.com/aimanmalib/crewforge/actions/workflows/ci.yml)
 [![PyPI](https://img.shields.io/pypi/v/crewforge)](https://pypi.org/project/crewforge/)
@@ -12,6 +12,7 @@ crewforge review src/                                  # six reviewers + a summa
 crewforge ask handbook.pdf -q "How many leave days?" --verify
 crewforge scaffold "Todo API: list, create and delete todos" -o todo-api
 crewforge write "Why unit tests matter" -f markdown -f html
+crewforge academic feedback draft.md --brief brief.md --language ms
 ```
 
 <p align="center">
@@ -19,7 +20,7 @@ crewforge write "Why unit tests matter" -f markdown -f html
 </p>
 <p align="center"><sub>A real run of <code>crewforge review</code>: seven agents, ~25 s, provider-reported tokens. Recorded with <a href="https://github.com/charmbracelet/vhs">VHS</a> from <a href="https://github.com/aimanmalib/crewforge/blob/main/docs/demo/review.tape"><code>docs/demo/review.tape</code></a> using Gemini 3.8 Flash through an OpenAI-compatible gateway (the <code>custom</code> provider). The wait for the model is shown in full.</sub></p>
 
-## Why one crew, four recipes
+## Why one crew, many recipes
 
 crewforge started as four separate command-line tools —
 [codeguard](https://github.com/aimanmalib/codeguard),
@@ -40,6 +41,10 @@ crewforge keeps one core — so a fix lands once — and turns each tool into a
 apply to every recipe: non-streaming requests, bounded retries, usage numbers
 taken only from the provider, keys only from the environment, and no run that
 reports success when an agent produced nothing.
+
+A fifth recipe, `academic`, replaces a standalone "academic writing pipeline"
+that drafted essays and marketed itself as AI-detector-resistant. Only the
+honest parts were kept; see [docs/porting.md](https://github.com/aimanmalib/crewforge/blob/main/docs/porting.md#academic-from-hermes-mimo-writer).
 
 ## 60-second quickstart
 
@@ -82,6 +87,10 @@ tables are trimmed to their totals.
 | `scaffold "DESCRIPTION"` | parser → schema → router, model, auth, test_gen, doc_gen (parallel) → validator | A runnable FastAPI project with `openapi.json`, tests and docs |
 | `validate PATH` | validator (no LLM) | Spec check; for a project directory, also checks the app serves every spec operation |
 | `write "TOPIC"` | research → outline → writer → SEO → editor ⇄ quality → translator → publisher | Article as Markdown/HTML/JSON, social snippets, a usage file |
+| `academic plan BRIEF` | brief → planner | Research questions, an outline with a word budget that adds up, sources to find, suggested readings labelled UNVERIFIED |
+| `academic feedback DRAFT` | structure, argument, clarity, citations (parallel) + a citation cross-check (no LLM) | Comments tied to quoted text in your draft; no rewriting |
+| `academic cite REFS` | formatter | Your references in APA 7, IEEE or Harvard; nothing added, missing details listed |
+| `academic disclose` | none (no LLM) | An AI-use statement built from the record of what the tool did |
 
 ### `review`
 
@@ -166,6 +175,68 @@ length (`--words` is a target given to the agents, not a hard limit), and the
 research agent has no web access, so statistics it quotes come from the model's
 training data. Review articles before publishing them.
 
+### `academic`
+
+An honest assistant for a student's or researcher's **own** work. It plans,
+comments and formats; it does not write the assignment, does not invent
+references, and has no "humanise" or AI-detector-evasion feature. Output in
+English or Malaysian Malay (`--language en|ms`; Malay output is checked for
+Indonesian forms such as *karena* or *kualitas*). Every step is recorded
+(file names and hashes, never content or keys) so `disclose` can write the
+AI-use statement many universities now ask for.
+
+```text
+$ crewforge academic plan brief.md -f markdown          # a 1,200-word TSL3013 essay brief
+# Assignment plan: Regulated Integration over Prohibition: ...
+- **Target length:** 1,200 words
+- **Citation style:** APA 7th edition
+## Research questions
+1. What pedagogical benefits does generative AI offer secondary school students completing homework tasks?
+...
+| # | Section | Words | Purpose |
+| 1 | Introduction | 150 | ... |   ...   Total: 1,200 words
+## Suggested readings (UNVERIFIED)
+> The AI proposed these. They may not exist, or may not say what is claimed. ...
+- ⚠ **UNVERIFIED: proposed or altered by the AI, check it** — Holmes, W., & Tuomi, I. (2022). ...
+total   2 calls   9,034 tokens (provider-reported)
+
+$ crewforge academic feedback draft.md --brief brief.md -f markdown
+## Argument
+- **Paragraph 2** (major): “Everyone knows that tuition in Malaysia is very expensive.”
+  - This is an unsupported generalization and an informal assertion rather than an evidence-based academic claim.
+  - *Suggestion:* Replace the appeal to common knowledge with scholarly evidence or empirical data ...
+## Citation check (no AI)
+**Cited in the text but not in the reference list:**
+- Lim, 2024
+total   4 calls   17,892 tokens (provider-reported)
+
+$ crewforge academic cite refs.txt --style ieee --language ms -f markdown
+[4] W. Holmes, M. Bialik, and C. Fadel, *Artificial Intelligence in Education: ...*. Center for Curriculum Redesign, 2019, ISBN: 978-1-7941-1293-0.
+  - ⚠ nombor semak ISBN salah: 9781794112930
+  - Butiran yang perlu ditambah: tempat penerbitan
+
+$ crewforge academic disclose --language ms             # no LLM, no key
+## Pernyataan Penggunaan AI
+Saya menggunakan crewforge academic (versi 0.1.0), sebuah alat berbantukan AI, dengan model ag/gemini-3.8-flash (openai), bagi bahagian tugasan berikut:
+- 22 Oktober 2026: Perancangan: alat ini menukar taklimat tugasan (brief-ms.md) kepada 3 soalan kajian, rangka 5 bahagian dan peruntukan perkataan. ...
+```
+
+How sources are labelled — there is no "verified" status, because the tool
+cannot check that a source exists:
+
+| Source | Label |
+|---|---|
+| You supplied it | *supplied by you (not checked online)* |
+| The model proposed it, with a DOI, URL or valid ISBN | **UNVERIFIED** — check it |
+| The model proposed it with none of those | **LIKELY FABRICATED** |
+| The model added a DOI/URL/ISBN to a reference you supplied | **UNVERIFIED**, naming the added identifier |
+
+A DOI the model proposes can be made up too, which is why even those stay
+unverified. All text the student sees lives in
+`src/crewforge/recipes/academic/locales/{en,ms}.yaml`; defaults (language,
+style, log file, input size, suggestion length) are the `academic:` section of
+`crewforge.yaml`.
+
 ## Providers
 
 The table is checked against the code by `tests/test_readme.py`.
@@ -193,13 +264,14 @@ An unknown provider name is a configuration error, not a silent fallback.
 
 ```mermaid
 flowchart LR
-    CLI["crewforge CLI<br/>review · ask · summarize · ingest<br/>scaffold · validate · write"] --> R
+    CLI["crewforge CLI<br/>review · ask · summarize · ingest<br/>scaffold · validate · write<br/>academic plan · feedback · cite · disclose"] --> R
 
     subgraph R["Recipes (src/crewforge/recipes)"]
         RV[review]
         DC[docs]
         AP[api]
         CT[content]
+        AC[academic]
     end
 
     R --> CREW
@@ -271,7 +343,7 @@ Validation: INVALID · 0/100 (0 operation(s) checked, 1 error(s), 0 warning(s))
   ERROR: No endpoints defined (paths is empty)
 ```
 
-| Situation | Before (the four tools) | crewforge |
+| Situation | Before (the earlier tools) | crewforge |
 |---|---|---|
 | Every reviewer returns nothing | "Review Complete!", exit 0 | exit 1, names each reviewer |
 | A reviewer answers in prose | treated as a review | exit 1, `agent 'style' (parse)` |
@@ -281,6 +353,9 @@ Validation: INVALID · 0/100 (0 operation(s) checked, 1 error(s), 0 warning(s))
 | Quality never reaches the threshold | article published | exit 1 unless `--accept-below-threshold` |
 | Question matches no passage | model asked to answer from nothing | exit 1, names `retriever`, no LLM call |
 | Generated code does not compile | template silently reused | exit 1, names the agent |
+| Model proposes a reference with no DOI/URL/ISBN | hermes-mimo-writer put invented "plausible" references in the bibliography | labelled LIKELY FABRICATED, never verified |
+| Formatter skips a reference you supplied | n/a | exit 1, names `formatter` |
+| `disclose` finds no recorded AI use | n/a | exit 1, no statement written |
 
 Exit codes: `0` success · `1` run failed (agent, validator or provider) · `2`
 usage or configuration error (bad flag, unknown provider, missing key).
