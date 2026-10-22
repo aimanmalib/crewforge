@@ -365,8 +365,9 @@ tests before the output was recorded.
 
 ## Contributing
 
-See [CONTRIBUTING.md](https://github.com/aimanmalib/crewforge/blob/main/CONTRIBUTING.md). In short: `pip install -e ".[dev,docs]"`,
-`pytest`, `ruff check . && ruff format --check .`, and every new failure path
+See [CONTRIBUTING.md](https://github.com/aimanmalib/crewforge/blob/main/CONTRIBUTING.md). In short: `uv sync --extra dev --extra docs`
+(versions from the committed `uv.lock`, as in CI), `uv run pytest`,
+`uv run ruff check . && uv run ruff format --check .`, and every new failure path
 needs a test that fails if the guard is removed.
 
 ## Security
