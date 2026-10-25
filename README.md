@@ -1,6 +1,6 @@
 # crewforge
 
-**One crew of LLM agents, five recipes — code review, document Q&A, API scaffolding, content and honest academic-writing help — on any OpenAI-compatible provider, and it fails loudly instead of pretending.**
+**One crew of LLM agents, five recipes: code review, document Q&A, API scaffolding, content and honest academic-writing help. It works with any OpenAI-compatible provider and fails loudly instead of pretending.**
 
 [![CI](https://github.com/aimanmalib/crewforge/actions/workflows/ci.yml/badge.svg)](https://github.com/aimanmalib/crewforge/actions/workflows/ci.yml)
 [![PyPI](https://img.shields.io/pypi/v/crewforge)](https://pypi.org/project/crewforge/)
@@ -23,7 +23,7 @@ crewforge academic feedback draft.md --brief brief.md --language ms
 
 ## Why one crew, many recipes
 
-crewforge started as four separate command-line tools —
+crewforge started as four separate command-line tools:
 [codeguard](https://github.com/aimanmalib/codeguard),
 [documind](https://github.com/aimanmalib/documind),
 [apiforge](https://github.com/aimanmalib/apiforge) and
@@ -37,7 +37,7 @@ showed the copies had drifted and that each hid its failures differently:
 - apiforge scored a spec with **no endpoints** 100/100;
 - contentforge wrote the real API key into its YAML file, and sent `${OPENAI_API_KEY}` literally as the key.
 
-crewforge keeps one core — so a fix lands once — and turns each tool into a
+crewforge keeps one core, so a fix lands once, and turns each tool into a
 *recipe*: a set of agents plus the steps that connect them. The same core rules
 apply to every recipe: non-streaming requests, bounded retries, usage numbers
 taken only from the provider, keys only from the environment, and no run that
@@ -232,13 +232,13 @@ Saya menggunakan crewforge academic (versi 0.1.0), sebuah alat berbantukan AI, d
 - 22 Oktober 2026: Perancangan: alat ini menukar taklimat tugasan (brief-ms.md) kepada 3 soalan kajian, rangka 5 bahagian dan peruntukan perkataan. ...
 ```
 
-How sources are labelled — there is no "verified" status, because the tool
+How sources are labelled: there is no "verified" status, because the tool
 cannot check that a source exists:
 
 | Source | Label |
 |---|---|
 | You supplied it | *supplied by you (not checked online)* |
-| The model proposed it, with a DOI, URL or valid ISBN | **UNVERIFIED** — check it |
+| The model proposed it, with a DOI, URL or valid ISBN | **UNVERIFIED**: check it |
 | The model proposed it with none of those | **LIKELY FABRICATED** |
 | The model added a DOI/URL/ISBN to a reference you supplied | **UNVERIFIED**, naming the added identifier |
 
@@ -277,16 +277,16 @@ An unknown provider name is a configuration error, not a silent fallback.
 
 <sub>Source: [docs/architecture.mmd](https://github.com/aimanmalib/crewforge/blob/main/docs/architecture.mmd) (re-render with `scripts/render_architecture.py`).</sub>
 
-- **`core/client.py`** — one async client. It always sends `"stream": false`,
+- **`core/client.py`**: one async client. It always sends `"stream": false`,
   retries only HTTP 429, 5xx and network/timeout errors (with capped exponential
   backoff that honours `Retry-After`), and fails on the first 401/403/4xx with a
   message naming the variable to fix. The key is only ever a request header.
-- **`core/agent.py`** — an agent is a role, a system prompt and per-agent
+- **`core/agent.py`**: an agent is a role, a system prompt and per-agent
   sampling defaults. `ask()` records usage and raises if the reply is blank;
   `ask_json()` additionally requires parseable JSON (optionally a pydantic schema).
-- **`core/crew.py`** — runs agents as sequential steps or parallel stages and
+- **`core/crew.py`**: runs agents as sequential steps or parallel stages and
   turns any failure into a `CrewFailedError` that lists every failed agent.
-- **`core/usage.py`** — per-agent calls, tokens, retries and latency, taken from
+- **`core/usage.py`**: per-agent calls, tokens, retries and latency, taken from
   the provider's `usage` object. Calls without usage are counted as "not reported",
   never estimated.
 
@@ -351,10 +351,10 @@ watching them fail; see [docs/porting.md](https://github.com/aimanmalib/crewforg
 
 crewforge was built with AI coding assistance (Claude Code) under the
 direction of its author, Muhammad Aiman. It consolidates four earlier tools by
-the same author — [codeguard](https://github.com/aimanmalib/codeguard),
+the same author ([codeguard](https://github.com/aimanmalib/codeguard),
 [documind](https://github.com/aimanmalib/documind),
 [apiforge](https://github.com/aimanmalib/apiforge) and
-[contentforge](https://github.com/aimanmalib/contentforge) — whose test suites
+[contentforge](https://github.com/aimanmalib/contentforge)), whose test suites
 were carried over into this repository (see [docs/porting.md](https://github.com/aimanmalib/crewforge/blob/main/docs/porting.md)
 for what was ported, re-targeted at the shared core, or dropped and why).
 
