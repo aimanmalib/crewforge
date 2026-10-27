@@ -77,3 +77,7 @@ First version: one framework replacing four separate tools
 
 ### Removed
 - apiforge's web dashboard and the illustrative token "stats"/daily estimates.
+
+[0.2.1]: https://github.com/aimanmalib/crewforge/compare/v0.2.0...v0.2.1
+[0.2.0]: https://github.com/aimanmalib/crewforge/compare/v0.1.0...v0.2.0
+[0.1.0]: https://github.com/aimanmalib/crewforge/releases/tag/v0.1.0
