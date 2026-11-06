@@ -1,11 +1,18 @@
-"""Render a :class:`ReviewResult` as JSON or Markdown."""
+"""Render a :class:`ReviewResult` as JSON, SARIF or Markdown."""
 
 from __future__ import annotations
 
+from pathlib import Path
 from typing import Any
 
+from ... import __version__
 from .agents import SEVERITIES
 from .pipeline import ReviewResult
+from .sources import Sources
+
+SARIF_SCHEMA = "https://json.schemastore.org/sarif-2.1.0.json"
+#: Finding severity -> SARIF ``level`` (GitHub code scanning shows error/warning/note).
+SARIF_LEVELS = {"critical": "error", "error": "error", "warning": "warning", "info": "note"}
 
 
 def report_dict(result: ReviewResult) -> dict[str, Any]:
@@ -101,3 +108,84 @@ def report_markdown(result: ReviewResult) -> str:
         f"Duration: {result.duration_s:.1f}s · Agents: {agents_run}_"
     )
     return "\n".join(lines) + "\n"
+
+
+def _uri(path: Path) -> str:
+    """Artifact URI: relative paths stay relative (GitHub resolves them from the repo root)."""
+    return path.as_uri() if path.is_absolute() else path.as_posix()
+
+
+def _int_line(value: Any) -> int | None:
+    if isinstance(value, bool):
+        return None
+    if isinstance(value, int):
+        return value if value > 0 else None
+    if isinstance(value, str) and value.strip().isdigit():
+        return int(value) or None
+    return None
+
+
+def report_sarif(result: ReviewResult, sources: Sources, target: str | Path) -> dict[str, Any]:
+    """SARIF 2.1.0 log for GitHub code scanning: one ``result`` per finding.
+
+    A finding's line refers to the text the reviewers saw. For a directory that
+    is every file joined under ``# File:`` headers, so the line is mapped back to
+    its file; a line that cannot be mapped keeps the reviewed path, without a region.
+    """
+    results: list[dict[str, Any]] = []
+    rules: dict[str, dict[str, Any]] = {}
+    for agent, r in result.agent_results.items():
+        for f in r.findings:
+            rule_id = str(f.get("cwe") or agent)
+            rules.setdefault(rule_id, {"id": rule_id})
+            title = str(f.get("title") or "Untitled")
+            message = f"{title}: {f['description']}" if f.get("description") else title
+            if f.get("suggestion"):
+                message += f"\nFix: {f['suggestion']}"
+            physical: dict[str, Any] = {"artifactLocation": {"uri": _uri(Path(target))}}
+            line = _int_line(f.get("line"))
+            spot = sources.locate(line) if line is not None else None
+            if spot is not None:
+                physical = {
+                    "artifactLocation": {"uri": _uri(spot[0])},
+                    "region": {"startLine": spot[1]},
+                }
+            results.append(
+                {
+                    "ruleId": rule_id,
+                    "level": SARIF_LEVELS.get(str(f.get("severity")), "note"),
+                    "message": {"text": message},
+                    "locations": [{"physicalLocation": physical}],
+                    "properties": {"agent": agent, "severity": f.get("severity", "info")},
+                }
+            )
+    return {
+        "$schema": SARIF_SCHEMA,
+        "version": "2.1.0",
+        "runs": [
+            {
+                "tool": {
+                    "driver": {
+                        "name": "crewforge",
+                        "version": __version__,
+                        "informationUri": "https://github.com/aimanmalib/crewforge",
+                        "rules": list(rules.values()),
+                    }
+                },
+                "invocations": [
+                    {
+                        "executionSuccessful": not result.failed_agents,
+                        "toolExecutionNotifications": [
+                            {
+                                "level": "error",
+                                "message": {"text": f"agent '{name}' failed: {r.error}"},
+                            }
+                            for name, r in result.agent_results.items()
+                            if not r.ok
+                        ],
+                    }
+                ],
+                "results": results,
+            }
+        ],
+    }
