@@ -4,6 +4,15 @@ All notable changes to this project are documented here. The format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and the project uses
 [Semantic Versioning](https://semver.org/).
 
+## [0.2.2] - 2026-11-06
+
+Documentation only; no change to the code or to what the recipes do.
+
+### Changed
+- README follows the layout shared by the author's other open-source projects: a centred header with a project logo
+  (`brand/logo.svg`, rendered to PNG by `brand/jana-aset.py`), a Bahasa Melayu summary after the English text, and
+  absolute links and image URLs so the page also renders on PyPI.
+
 ## [0.2.1] - 2026-10-22
 
 No change to what the recipes do; this release makes the package easier to trust and to install.
@@ -78,6 +87,7 @@ First version: one framework replacing four separate tools
 ### Removed
 - apiforge's web dashboard and the illustrative token "stats"/daily estimates.
 
+[0.2.2]: https://github.com/aimanmalib/crewforge/compare/v0.2.1...v0.2.2
 [0.2.1]: https://github.com/aimanmalib/crewforge/compare/v0.2.0...v0.2.1
 [0.2.0]: https://github.com/aimanmalib/crewforge/compare/v0.1.0...v0.2.0
 [0.1.0]: https://github.com/aimanmalib/crewforge/releases/tag/v0.1.0
