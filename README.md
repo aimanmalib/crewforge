@@ -1,12 +1,18 @@
-# crewforge
+<p align="center"><img src="https://raw.githubusercontent.com/aimanmalib/crewforge/main/brand/logo-512.png" width="112" height="112" alt="crewforge"></p>
 
-**One crew of LLM agents, five recipes: code review, document Q&A, API scaffolding, content and honest academic-writing help. It works with any OpenAI-compatible provider and fails loudly instead of pretending.**
+<h1 align="center">crewforge</h1>
 
-[![CI](https://github.com/aimanmalib/crewforge/actions/workflows/ci.yml/badge.svg)](https://github.com/aimanmalib/crewforge/actions/workflows/ci.yml)
-[![PyPI](https://img.shields.io/pypi/v/crewforge)](https://pypi.org/project/crewforge/)
-[![OpenSSF Scorecard](https://api.scorecard.dev/projects/github.com/aimanmalib/crewforge/badge)](https://scorecard.dev/viewer/?uri=github.com/aimanmalib/crewforge)
-![Python 3.10–3.14](https://img.shields.io/badge/python-3.10%E2%80%933.14-blue)
-![License: MIT](https://img.shields.io/badge/license-MIT-green)
+<p align="center"><a href="https://github.com/aimanmalib/crewforge/actions/workflows/ci.yml"><img src="https://github.com/aimanmalib/crewforge/actions/workflows/ci.yml/badge.svg" alt="CI"></a> <a href="https://pypi.org/project/crewforge/"><img src="https://img.shields.io/pypi/v/crewforge" alt="PyPI"></a> <a href="https://scorecard.dev/viewer/?uri=github.com/aimanmalib/crewforge"><img src="https://api.scorecard.dev/projects/github.com/aimanmalib/crewforge/badge" alt="OpenSSF Scorecard"></a> <img src="https://img.shields.io/badge/python-3.10%E2%80%933.14-blue" alt="Python 3.10–3.14"> <a href="https://github.com/aimanmalib/crewforge/blob/main/LICENSE"><img src="https://img.shields.io/badge/license-MIT-green" alt="License: MIT"></a></p>
+
+<p align="center"><b>One crew of LLM agents, five recipes, any OpenAI-compatible provider.</b> · <i>Satu kru ejen LLM, lima resipi, mana-mana penyedia serasi OpenAI.</i><br>
+<a href="https://pypi.org/project/crewforge/">PyPI</a> · <a href="https://github.com/aimanmalib/crewforge/blob/main/CHANGELOG.md">changelog</a> · <a href="https://github.com/aimanmalib/crewforge/blob/main/docs/porting.md">porting notes</a> · Built in Malaysia by <a href="https://aimanmalib.com">Aiman Malib</a></p>
+
+crewforge is a command-line tool and Python library that runs a crew of LLM agents through five recipes: code
+review, document Q&A, API scaffolding, content writing and honest academic-writing help. It works with any
+OpenAI-compatible provider, reads API keys only from the environment, and fails loudly instead of pretending: a run
+in which an agent produced nothing exits with code 1 and names that agent.
+
+[Bahasa Melayu ↓](#bahasa-melayu)
 
 ```bash
 crewforge review src/                                  # six reviewers + a summary
@@ -377,13 +383,47 @@ Please report vulnerabilities privately through
 See [SECURITY.md](https://github.com/aimanmalib/crewforge/blob/main/SECURITY.md) for scope notes (what is sent to your provider,
 and what `validate` executes).
 
-## License
+## Bahasa Melayu
 
-[MIT](https://github.com/aimanmalib/crewforge/blob/main/LICENSE) © Muhammad Aiman
+crewforge ialah alat baris arahan dan pustaka Python yang menjalankan satu kru ejen LLM melalui lima resipi:
+semakan kod (`review`), soal jawab dokumen (`ask`, `summarize`), penjanaan projek API FastAPI (`scaffold`,
+`validate`), penulisan kandungan (`write`) dan bantuan penulisan akademik yang jujur (`academic`). Ia berfungsi
+dengan mana-mana penyedia serasi OpenAI, termasuk model tempatan melalui Ollama atau llama.cpp. Kunci API hanya
+dibaca dari pemboleh ubah persekitaran, tidak pernah ditulis ke fail.
 
----
+**Mengapa satu kru.** crewforge menggabungkan empat alat lama (codeguard, documind, apiforge, contentforge) yang
+masing-masing menyimpan salinan sendiri bagi rangka yang sama. Salinan itu sudah berbeza dan setiap satu
+menyembunyikan kegagalan dengan cara sendiri. Kini teras dikongsi: pembaikan dibuat sekali, dan setiap alat menjadi
+resipi di atas teras itu.
 
-Built by [Sasa Teguh](https://sasateguh.com) · Malaysia
+**Gagal dengan jelas.** Larian yang ejennya memulangkan jawapan kosong atau tidak boleh dihurai, atau pengesah
+yang tidak menyemak apa-apa, keluar dengan kod 1 dan menamakan ejen itu. Kod keluar: `0` berjaya, `1` larian
+gagal, `2` ralat penggunaan atau konfigurasi. Bilangan token diambil daripada laporan penyedia sahaja, tidak
+dianggar.
+
+**Resipi `academic`.** Membantu pelajar dan penyelidik dengan kerja mereka **sendiri**: merancang dari taklimat
+tugasan, memberi ulasan atas draf tanpa menulis semula, memformat rujukan yang diberi pengguna (APA 7, IEEE,
+Harvard) tanpa menambah rujukan baharu, dan menulis pernyataan penggunaan AI daripada rekod langkah yang
+dijalankan. Output dalam bahasa Inggeris atau Bahasa Melayu (`--language ms`); output BM disemak untuk bentuk
+Indonesia seperti *karena* atau *kualitas*. Sumber yang dicadangkan model dilabel UNVERIFIED, atau LIKELY
+FABRICATED jika tiada DOI, URL atau ISBN. Tiada ciri "humanise" atau mengelak pengesan AI.
+
+**Pasang dan guna.**
+
+```bash
+pip install crewforge                 # Python 3.10 hingga 3.14
+pip install "crewforge[docs,api]"     # pilihan: PDF/DOCX dan semakan aplikasi FastAPI
+export OPENAI_API_KEY=sk-...          # atau penyedia lain, lihat `crewforge providers`
+crewforge review src/
+crewforge academic feedback draf.md --brief taklimat.md --language ms
+```
+
+Senarai penyedia, contoh setiap resipi dan seni bina ada dalam bahagian bahasa Inggeris di atas
+([Providers](https://github.com/aimanmalib/crewforge#providers), [Recipes](https://github.com/aimanmalib/crewforge#recipes)).
+
+## Licence
+
+[MIT](https://github.com/aimanmalib/crewforge/blob/main/LICENSE) © Muhammad Aiman. Made by [Aiman Malib](https://aimanmalib.com), Malaysia.
 
 ## Work with Sasa Teguh
 
