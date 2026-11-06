@@ -87,7 +87,7 @@ tables are trimmed to their totals.
 
 | Command | Agents | What you get |
 |---|---|---|
-| `review PATH` | security, style, complexity, logic, testing, documentation (parallel) → summary | Findings by severity, a decision and a score; `-f json` for CI |
+| `review PATH` | security, style, complexity, logic, testing, documentation (parallel) → summary | Findings by severity, a decision and a score; `-f json` for CI, `-f sarif` for GitHub code scanning |
 | `ingest FILES` | ingester, indexer (no LLM) | How each file was parsed and chunked |
 | `ask FILES -q Q [--verify] [--rerank]` | retriever → answerer → fact-checker | An answer with `[Source N]` citations and a claim-by-claim verdict |
 | `summarize FILES` | summarizer | Summary and key points per document |
@@ -117,6 +117,30 @@ $ crewforge review app.py -f markdown -o review.md      # app.py builds SQL with
   - Fix: conn.execute('SELECT * FROM users WHERE name = ?', (name,)).fetchall()
 ...
 total   7 calls   22,366 tokens (provider-reported)
+```
+
+`-f sarif` writes a [Static Analysis Results Interchange Format 2.1.0](https://docs.oasis-open.org/sarif/sarif/v2.1.0/sarif-v2.1.0.html)
+log (`sarif`), the format GitHub code scanning reads, so findings can appear in a repository's Security tab. Each finding becomes one
+result: `critical` and `error` map to level `error`, `warning` to `warning`, `info` to `note`; the rule is the
+finding's CWE when it has one, otherwise the reviewer's name. When you review a directory, the line a reviewer
+reports is mapped back to the file it came from. A finding whose line is missing or outside the code points at the
+reviewed path without a line. Reviewers that fail are listed in `invocations`, and the exit code is the same as for
+the other formats.
+
+```yaml
+# .github/workflows/review.yml (needs an API key secret, e.g. OPENAI_API_KEY)
+permissions:
+  contents: read
+  security-events: write
+steps:
+  - uses: actions/checkout@v4
+  - run: pipx run crewforge review src/ -f sarif -o crewforge.sarif
+    env:
+      OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+  - uses: github/codeql-action/upload-sarif@v3
+    if: always()
+    with:
+      sarif_file: crewforge.sarif
 ```
 
 ### `ask` and `summarize`
@@ -415,8 +439,12 @@ pip install crewforge                 # Python 3.10 hingga 3.14
 pip install "crewforge[docs,api]"     # pilihan: PDF/DOCX dan semakan aplikasi FastAPI
 export OPENAI_API_KEY=sk-...          # atau penyedia lain, lihat `crewforge providers`
 crewforge review src/
+crewforge review src/ -f sarif -o crewforge.sarif   # untuk GitHub code scanning
 crewforge academic feedback draf.md --brief taklimat.md --language ms
 ```
+
+`review -f sarif` menulis laporan `SARIF` 2.1.0 yang dibaca GitHub code scanning: setiap dapatan menjadi satu
+keputusan dalam tab Security, dan baris dalam semakan folder dipetakan kembali ke fail asalnya.
 
 Senarai penyedia, contoh setiap resipi dan seni bina ada dalam bahagian bahasa Inggeris di atas
 ([Providers](https://github.com/aimanmalib/crewforge#providers), [Recipes](https://github.com/aimanmalib/crewforge#recipes)).

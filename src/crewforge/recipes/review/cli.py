@@ -22,8 +22,14 @@ from ...cli_support import (
 from ...core.config import LLMConfig
 from .agents import REVIEW_AGENTS
 from .pipeline import CodeReviewCrew, ReviewResult
-from .report import report_dict, report_markdown
-from .sources import DEFAULT_MAX_FILE_BYTES, SourceError, collect, detect_language
+from .report import report_dict, report_markdown, report_sarif
+from .sources import (
+    DEFAULT_MAX_FILE_BYTES,
+    SourceError,
+    Sources,
+    collect,
+    detect_language,
+)
 
 # Kept under the old private name: codeguard's tests and users imported it.
 _detect_language = detect_language
@@ -60,7 +66,8 @@ async def _run_review(
     "fmt",
     default="text",
     show_default=True,
-    type=click.Choice(["text", "json", "markdown"]),
+    type=click.Choice(["text", "json", "markdown", "sarif"]),
+    help="sarif = SARIF 2.1.0 for GitHub code scanning.",
 )
 @click.option("--output", "-o", default="", help="Write the report to this file.")
 @click.option(
@@ -77,6 +84,7 @@ def review(ctx, path, path_opt, language, fmt, output, allow_partial):
     Example:
       crewforge review app.py
       crewforge review src/ -f json -o review.json
+      crewforge review src/ -f sarif -o review.sarif
     """
     target = path or path_opt
     if not target:
@@ -116,11 +124,18 @@ def review(ctx, path, path_opt, language, fmt, output, allow_partial):
             allow_partial=allow_partial,
         )
     )
-    _display_results(result, fmt, output)
+    _display_results(result, fmt, output, sources, target)
 
 
-def _display_results(result: ReviewResult, fmt: str, output: str) -> None:
-    text = json.dumps(report_dict(result), indent=2) if fmt == "json" else report_markdown(result)
+def _display_results(
+    result: ReviewResult, fmt: str, output: str, sources: Sources, target: str
+) -> None:
+    if fmt == "json":
+        text = json.dumps(report_dict(result), indent=2)
+    elif fmt == "sarif":
+        text = json.dumps(report_sarif(result, sources, target), indent=2)
+    else:
+        text = report_markdown(result)
     if output:
         Path(output).write_text(text, encoding="utf-8")
         err_console.print(f"[green]Report written to {output}[/]")

@@ -4,6 +4,16 @@ All notable changes to this project are documented here. The format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and the project uses
 [Semantic Versioning](https://semver.org/).
 
+## [0.3.0] - 2026-11-07
+
+### Added
+- `crewforge review -f sarif`: a Static Analysis Results Interchange Format (`SARIF`) 2.1.0 report for GitHub code
+  scanning (#3). One result per finding, with `critical`/`error` as level `error`, `warning` as `warning` and `info`
+  as `note`; the rule is the finding's CWE, or the reviewer's name when there is none. In a directory review, a finding's line is mapped back to the file it came
+  from; a line that cannot be mapped keeps the reviewed path without a region. Failed reviewers are listed in the
+  run's `invocations`, and exit codes are unchanged. Inspired by scanaislop/aislop and agent-sh/agentsys, which offer
+  the same output for the same purpose; written from the published specification, with no new dependency.
+
 ## [0.2.2] - 2026-11-06
 
 Documentation only; no change to the code or to what the recipes do.
@@ -87,6 +97,7 @@ First version: one framework replacing four separate tools
 ### Removed
 - apiforge's web dashboard and the illustrative token "stats"/daily estimates.
 
+[0.3.0]: https://github.com/aimanmalib/crewforge/compare/v0.2.2...v0.3.0
 [0.2.2]: https://github.com/aimanmalib/crewforge/compare/v0.2.1...v0.2.2
 [0.2.1]: https://github.com/aimanmalib/crewforge/compare/v0.2.0...v0.2.1
 [0.2.0]: https://github.com/aimanmalib/crewforge/compare/v0.1.0...v0.2.0
